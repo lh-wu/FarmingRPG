@@ -6,6 +6,7 @@ public enum ToolEffect
 
 public enum UsingToolDirection
 {
+    None,
     Right,
     Left,
     Up,
@@ -14,6 +15,7 @@ public enum UsingToolDirection
 
 public enum LiftingToolDirection
 {
+    None,
     Right,
     Left,
     Up,
@@ -22,6 +24,7 @@ public enum LiftingToolDirection
 
 public enum PickingDirection
 {
+    None,
     Right,
     Left,
     Up,
@@ -30,6 +33,7 @@ public enum PickingDirection
 
 public enum SwingingToolDirection
 {
+    None,
     Right,
     Left,
     Up,
@@ -38,6 +42,7 @@ public enum SwingingToolDirection
 
 public enum IdleDirection
 {
+    None,
     Right,
     Left,
     Up,

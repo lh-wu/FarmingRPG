@@ -787,6 +787,7 @@ GameObject:
   - component: {fileID: 5712121855466519767}
   - component: {fileID: 9129467928861000619}
   - component: {fileID: 1775669915280633097}
+  - component: {fileID: 9129467928861000620}
   - component: {fileID: 1259763794736400773}
   m_Layer: 0
   m_Name: Player
@@ -1541,6 +1542,30 @@ SortingGroup:
   m_SortingLayer: 1
   m_SortingOrder: 0
   m_SortAtRoot: 0
+--- !u!114 &9129467928861000620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2364434176416364098}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecc374e87a5fd8040923947a65425ef7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputX: 0
+  inputY: 0
+  isWalking: 0
+  isRunning: 0
+  isIdle: 0
+  isCarrying: 0
+  toolEffect: 0
+  usingToolDirection: 0
+  liftingToolDirection: 0
+  pickingDirection: 0
+  swingingToolDirection: 0
+  idleDirection: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
