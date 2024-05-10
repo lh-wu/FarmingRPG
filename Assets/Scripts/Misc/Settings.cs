@@ -2,6 +2,10 @@ using UnityEngine;
 
 public static class Settings
 {
+    public const float runningSpeed = 5.333f;
+    public const float walkingSpeed = 2.666f;
+
+
     // 创建散列值，用于对应玩家动画的Parameter
     public static int xInput;
     public static int yInput;
