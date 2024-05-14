@@ -42,21 +42,65 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
         #region Player Input
         ResetAnimationTriggers();
         PlayerMovementInput();
+        EventHandler.CallMovementEvent(inputX, inputY, isWalking, isRunning, isIdle, isCarrying, toolEffect, usingToolDirection, liftingToolDirection, pickingDirection, swingingToolDirection, idleDirection); ;
         #endregion
     }
+
+    private void FixedUpdate()
+    {
+        Vector2 move = new Vector2(inputX*Time.deltaTime*movementSpeed, inputY*Time.deltaTime*movementSpeed);
+        rb.MovePosition(rb.position+ move);
+    }
+
 
     private void PlayerMovementInput()
     {
         inputX = Input.GetAxis("Horizontal");
         inputY = Input.GetAxis("Vertical");
-        Debug.Log("InputX = " + inputX + "InputY = "+inputY);
         if(inputX!=0 && inputY!=0) {
             inputX = 0.71f * inputX;
             inputY = 0.71f * inputY;
         }
-        if(inputX!=0 || inputY != 0)
+        //Debug.Log("InputX = " + inputX + "InputY = " + inputY);
+        if (inputX!=0 || inputY != 0)
         {
+            isIdle = false;
+            // 判断走路还是跑步,需要注意此处的playerDirection并不决定玩家移动动画的朝向，具体逻辑在animator中
+            if(Input.GetKey(KeyCode.LeftShift)||Input.GetKey(KeyCode.RightShift)) {
+                isRunning = false;
+                isWalking = true;
+                movementSpeed = Settings.walkingSpeed;
+            }
+            else
+            {
+                isRunning = true;
+                isWalking = false;
+                movementSpeed = Settings.runningSpeed;
+            }
 
+            if (inputX < 0)
+            {
+                playerDireciton = Direction.Left;
+            }
+            else if(inputX > 0)
+            {
+                playerDireciton= Direction.Right;
+            }
+            else if(inputY < 0)
+            {
+                playerDireciton= Direction.Down;
+            }
+            else
+            {
+                playerDireciton = Direction.Up;
+            }
+            Debug.Log(playerDireciton);
+        }
+        else if (inputX == 0 && inputY == 0)
+        {
+            isWalking = false;
+            isRunning = false;
+            isIdle = true;
         }
 
 
