@@ -94,7 +94,7 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
             {
                 playerDireciton = Direction.Up;
             }
-            Debug.Log(playerDireciton);
+
         }
         else if (inputX == 0 && inputY == 0)
         {
