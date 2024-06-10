@@ -6,6 +6,15 @@ public static class Settings
     public const float walkingSpeed = 2.666f;
 
 
+
+
+    #region Item Fade
+    public const float fadeInSecond = 0.25f;
+    public const float fadeOutSecond = 0.35f;
+    public const float targetAlpha = 0.45f;
+    #endregion
+
+
     // 创建散列值，用于对应玩家动画的Parameter
     public static int xInput;
     public static int yInput;
