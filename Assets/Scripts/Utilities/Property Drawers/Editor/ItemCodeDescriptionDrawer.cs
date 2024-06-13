@@ -20,10 +20,12 @@ public class ItemCodeDescriptionDrawer : PropertyDrawer
             EditorGUI.BeginChangeCheck();       //检查该值的变化
 
             //显示itemCode
+            // label为inspector界面偏左的变量名
             var newValue = EditorGUI.IntField(new Rect(position.x, position.y, position.width, position.height / 2), label, property.intValue);
 
             //显示itemDescription
             EditorGUI.LabelField(new Rect(position.x, position.y + position.height / 2, position.width, position.height / 2), "Item Description", GetItemDescription(property.intValue));
+
 
             //如果发生了变化，则改为新的值
             if (EditorGUI.EndChangeCheck())

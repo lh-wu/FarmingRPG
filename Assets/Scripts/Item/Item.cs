@@ -27,8 +27,20 @@ public class Item : MonoBehaviour
         }
     }
 
-    public void Init(int itemCode)
+    public void Init(int itemCodeParam)
     {
-        
+        if (itemCodeParam != 0)
+        {
+            ItemCode = itemCodeParam;
+            ItemDetails itemDetails = InventoryManager.Instance.GetItemDetails(ItemCode);
+            spriteRenderer.sprite = itemDetails.itemSprite;
+
+            //如果该item是ItemType.ReapableScenary类型，则为其添加 碰撞-摇晃 的c#脚本
+            if (itemDetails.itemType == ItemType.ReapableScenary)
+            {
+                gameObject.AddComponent<ItemNudge>();
+            }
+
+        }
     }
 }
