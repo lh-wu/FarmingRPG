@@ -73,3 +73,11 @@ public enum ItemType
     none,
     count
 }
+
+public enum InventoryLocation
+{
+    Player,
+    Chest,
+    Count
+}
+
