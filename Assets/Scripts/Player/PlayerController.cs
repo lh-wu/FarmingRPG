@@ -25,6 +25,9 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
     private Direction playerDireciton;
     private float movementSpeed;
     private bool enablePlayerInput = true;
+
+    private Camera mainCamera;
+
     public bool EnablePlayerInput
     {
         set { enablePlayerInput = value; }
@@ -35,6 +38,7 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
     {
         base.Awake();
         rb = GetComponent<Rigidbody2D>();
+        mainCamera = Camera.main;
     }
 
     private void Update()
@@ -103,8 +107,6 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
             isIdle = true;
         }
 
-
-
     }
 
     private void ResetAnimationTriggers()
@@ -115,4 +117,11 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
         pickingDirection = PickingDirection.None;
         swingingToolDirection = SwingingToolDirection.None;
     }
+
+    public Vector3 GetPlayerPosition()
+    {
+        //返回玩家相对于相机的位置,忽略z的情况下，左下角为00 右上角为11
+        return mainCamera.WorldToViewportPoint(transform.position);
+    }
+
 }
