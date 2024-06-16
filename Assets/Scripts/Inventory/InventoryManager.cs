@@ -60,13 +60,23 @@ public class InventoryManager : SingletonMonobehavior<InventoryManager>
         return null;
     }
 
+    /// <summary>
+    /// 将item添加到inventoryLocation中，并destory gameobject
+    /// </summary>
+    /// <param name="inventoryLocation"></param>
+    /// <param name="item"></param>
+    /// <param name="gameObject"></param>
     public void Additem(InventoryLocation inventoryLocation, Item item, GameObject gameObject)
     {
         Additem(inventoryLocation, item);
         Destroy(gameObject);
     }
 
-
+    /// <summary>
+    /// 仅将item添加到inventoryLocation中
+    /// </summary>
+    /// <param name="inventoryLocation"></param>
+    /// <param name="item"></param>
     public void Additem(InventoryLocation inventoryLocation, Item item)
     {
         int itemCode = item.ItemCode;
@@ -92,7 +102,7 @@ public class InventoryManager : SingletonMonobehavior<InventoryManager>
         inventoryItem.itemQuantity = 1;
         inventoryItems.Add(inventoryItem);
 
-        DebugPrintInventoryList(inventoryItems);
+        // DebugPrintInventoryList(inventoryItems);
     }
 
 
@@ -107,9 +117,15 @@ public class InventoryManager : SingletonMonobehavior<InventoryManager>
         inventoryItems[itemPosition] = inventoryItem;
 
 
-        DebugPrintInventoryList(inventoryItems);
+        // DebugPrintInventoryList(inventoryItems);
     }
 
+    /// <summary>
+    /// 根据itemCode检查inventoryLocation中是否已经存在该物品，并返回int类型的pos，没找到为-1
+    /// </summary>
+    /// <param name="inventoryLocation"></param>
+    /// <param name="itemCode"></param>
+    /// <returns></returns>
     private int FindItemInventory(InventoryLocation inventoryLocation, int itemCode)
     {
         List<InventoryItem> inventoryItems = inventoryLists[(int)inventoryLocation];
@@ -122,13 +138,13 @@ public class InventoryManager : SingletonMonobehavior<InventoryManager>
 
 
 
-    private void DebugPrintInventoryList(List<InventoryItem> inventoryItems)
-    {
-        foreach(var inventoryItem in inventoryItems)
-        {
-            Debug.Log("ItemCode: " + inventoryItem.itemCode + ", ItemDescription: " + InventoryManager.Instance.GetItemDetails(inventoryItem.itemCode).itemDescription + ", Nums: " + inventoryItem.itemQuantity);
-        }
-        Debug.Log("*****************************************************************");
-    }
+    //private void DebugPrintInventoryList(List<InventoryItem> inventoryItems)
+    //{
+    //    foreach(var inventoryItem in inventoryItems)
+    //    {
+    //        Debug.Log("ItemCode: " + inventoryItem.itemCode + ", ItemDescription: " + InventoryManager.Instance.GetItemDetails(inventoryItem.itemCode).itemDescription + ", Nums: " + inventoryItem.itemQuantity);
+    //    }
+    //    Debug.Log("*****************************************************************");
+    //}
 
 }
