@@ -43,11 +43,15 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
 
     private void Update()
     {
-        #region Player Input
-        ResetAnimationTriggers();
-        PlayerMovementInput();
-        EventHandler.CallMovementEvent(inputX, inputY, isWalking, isRunning, isIdle, isCarrying, toolEffect, usingToolDirection, liftingToolDirection, pickingDirection, swingingToolDirection, idleDirection); ;
-        #endregion
+        if (EnablePlayerInput)
+        {
+            #region Player Input
+            ResetAnimationTriggers();
+            PlayerMovementInput();
+            EventHandler.CallMovementEvent(inputX, inputY, isWalking, isRunning, isIdle, isCarrying, toolEffect, usingToolDirection, liftingToolDirection, pickingDirection, swingingToolDirection, idleDirection); 
+            #endregion
+        }
+
     }
 
     private void FixedUpdate()
@@ -118,10 +122,30 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
         swingingToolDirection = SwingingToolDirection.None;
     }
 
+    /// <summary>
+    /// 返回玩家相对于相机的位置,忽略z的情况下，左下角为00 右上角为11
+    /// </summary>
+    /// <returns></returns>
     public Vector3 GetPlayerPosition()
     {
-        //返回玩家相对于相机的位置,忽略z的情况下，左下角为00 右上角为11
+
         return mainCamera.WorldToViewportPoint(transform.position);
     }
 
+
+    public void DisablePlayerInputAndResetMovenment()
+    {
+        EnablePlayerInput = false;
+        ResetMovement();
+        EventHandler.CallMovementEvent(inputX, inputY, isWalking, isRunning, isIdle, isCarrying, toolEffect, usingToolDirection, liftingToolDirection, pickingDirection, swingingToolDirection, idleDirection);
+    }
+
+    private void ResetMovement()
+    {
+        inputX = 0f;
+        inputY = 0f;
+        isWalking = false;
+        isRunning = false;
+        isIdle = true;
+    }
 }

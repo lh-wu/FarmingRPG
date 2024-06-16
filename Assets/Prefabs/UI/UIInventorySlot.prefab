@@ -59,7 +59,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -181,6 +181,8 @@ MonoBehaviour:
   inventorySlotHighlight: {fileID: 4968739288801783903}
   inventorySlotImage: {fileID: 3743200234053144943}
   textMeshProUGUI: {fileID: 2444477412260288001}
+  inventoryBar: {fileID: 0}
+  itemPrefab: {fileID: 3196835923890210588, guid: fce88e3a92056b74d8b0f7f5b645d056, type: 3}
   itemDetails:
     itemCode: 0
     itemType: 0
@@ -254,7 +256,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

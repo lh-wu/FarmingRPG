@@ -105,6 +105,45 @@ public class InventoryManager : SingletonMonobehavior<InventoryManager>
         // DebugPrintInventoryList(inventoryItems);
     }
 
+    /// <summary>
+    /// 查找要删除的物品的位置，调用函数进行删除，并更新
+    /// </summary>
+    /// <param name="inventoryLocation"></param>
+    /// <param name="itemCode"></param>
+    internal void RemoveItem(InventoryLocation inventoryLocation, int itemCode)
+    {
+        List<InventoryItem> inventoryList = inventoryLists[(int)inventoryLocation];
+        int itemPosition = FindItemInventory(inventoryLocation, itemCode);
+        if (itemPosition != -1)
+        {
+            RemoveItemAtPosition(inventoryList, itemCode, itemPosition);
+        }
+        EventHandler.CallInventoryUpdateEvent(inventoryLocation, inventoryLists[(int)inventoryLocation]);
+    }
+
+
+    /// <summary>
+    /// 从指定的背包中的指定位置，减少一个物品的量，被RemoveItem调用
+    /// </summary>
+    /// <param name="inventoryList"></param>
+    /// <param name="itemCode"></param>
+    /// <param name="itemPosition"></param>
+    private void RemoveItemAtPosition(List<InventoryItem> inventoryList, int itemCode, int itemPosition)
+    {
+        InventoryItem inventoryItem = new InventoryItem();
+        int quantity = inventoryList[itemPosition].itemQuantity-1;
+        if (quantity > 0)
+        {
+            inventoryItem.itemQuantity = quantity;
+            inventoryItem.itemCode = itemCode;
+            inventoryList[itemPosition] = inventoryItem;
+        }
+        else
+        {
+            inventoryList.RemoveAt(itemPosition);
+        }
+
+    }
 
     private void AddItemAtPosition(List<InventoryItem> inventoryItems, int itemCode, int itemPosition)
     {
