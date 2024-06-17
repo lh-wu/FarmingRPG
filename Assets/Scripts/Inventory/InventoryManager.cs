@@ -28,7 +28,7 @@ public class InventoryManager : SingletonMonobehavior<InventoryManager>
     {
         inventoryLists = new List<InventoryItem>[(int)InventoryLocation.Count];
         inventoryListCapacityArray = new int[(int)InventoryLocation.Count];
-
+        // 根据背包的数量（nventoryLocation.Count）创建对应数量的列表
         for (int i=0;i< (int)InventoryLocation.Count; ++i)
         {
             inventoryLists[i] = new List<InventoryItem>();
@@ -73,7 +73,7 @@ public class InventoryManager : SingletonMonobehavior<InventoryManager>
     }
 
     /// <summary>
-    /// 仅将item添加到inventoryLocation中
+    /// 仅将item添加到inventoryLocation中，不删除gameobject
     /// </summary>
     /// <param name="inventoryLocation"></param>
     /// <param name="item"></param>
@@ -175,7 +175,27 @@ public class InventoryManager : SingletonMonobehavior<InventoryManager>
         return -1;
     }
 
+    /// <summary>
+    /// 交换inventoryLocation的背包的srcSlotID位置与dstSlotID的物品，不可与空的物体交换
+    /// </summary>
+    /// <param name="inventoryLocation"></param>
+    /// <param name="srcSlotID"></param>
+    /// <param name="dstSlotID"></param>
+    public void SwapUIInventorySlot(InventoryLocation inventoryLocation, int srcSlotID, int dstSlotID)
+    {
+        List<InventoryItem> inventoryItems = inventoryLists[(int)inventoryLocation];
+        if (srcSlotID >= inventoryItems.Count || dstSlotID >= inventoryItems.Count)
+        {
+            return;
+        }
+        InventoryItem srcInventoryItem = inventoryItems[srcSlotID];
+        InventoryItem dstInventoryItem = inventoryItems[dstSlotID];
+        inventoryItems[srcSlotID] = dstInventoryItem;
+        inventoryItems[dstSlotID] = srcInventoryItem;
+        EventHandler.CallInventoryUpdateEvent(inventoryLocation, inventoryLists[(int)inventoryLocation]);
 
+
+    }
 
     //private void DebugPrintInventoryList(List<InventoryItem> inventoryItems)
     //{

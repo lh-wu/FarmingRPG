@@ -18,6 +18,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEn
     [SerializeField] private GameObject itemPrefab = null;
     [HideInInspector] public ItemDetails itemDetails;
     [HideInInspector] public int itemQuantity;
+    [SerializeField] private int slotID = 0;
 
 
     private void Start()
@@ -61,7 +62,11 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEn
             // 该if判断最终是否拖拽到了UIInventoryBar上
             if(eventData.pointerCurrentRaycast.gameObject!=null&& eventData.pointerCurrentRaycast.gameObject.GetComponent<UIInventorySlot>() != null)
             {
-                // TODO 进行换位操作
+                int dstSlotID = eventData.pointerCurrentRaycast.gameObject.GetComponent<UIInventorySlot>().slotID;
+                if (slotID != dstSlotID)
+                {
+                    InventoryManager.Instance.SwapUIInventorySlot(InventoryLocation.Player,slotID, dstSlotID);
+                }
             }
             else
             {
