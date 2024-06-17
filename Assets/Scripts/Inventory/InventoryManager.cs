@@ -60,6 +60,37 @@ public class InventoryManager : SingletonMonobehavior<InventoryManager>
         return null;
     }
 
+    public string GetItemTypeDescription(ItemType itemType)
+    {
+        string itemTypeDescription;
+        switch (itemType)
+        {
+            case ItemType.BreakingTool:
+                itemTypeDescription = Settings.BreakingTool;
+                break;
+            case ItemType.ChoppingTool:
+                itemTypeDescription = Settings.ChoppingTool;
+                break;
+            case ItemType.CollectingTool:
+                itemTypeDescription = Settings.CollectingTool;
+                break;
+            case ItemType.HoeingTool:
+                itemTypeDescription = Settings.HoeingTool;
+                break;
+            case ItemType.ReapingTool:
+                itemTypeDescription = Settings.ReapingTool;
+                break;
+            case ItemType.WateringTool:
+                itemTypeDescription = Settings.WateringTool;
+                break;
+            default:
+                itemTypeDescription = itemType.ToString();
+                break;
+        }
+        return itemTypeDescription;
+    }
+
+
     /// <summary>
     /// 将item添加到inventoryLocation中，并destory gameobject
     /// </summary>

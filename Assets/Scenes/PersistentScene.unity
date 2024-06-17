@@ -143,6 +143,10 @@ PrefabInstance:
       propertyPath: inventoryBar
       value: 
       objectReference: {fileID: 78412009}
+    - target: {fileID: 7353549039014893590, guid: e7ee3c49414a0c84d997b0c9aa71b978, type: 3}
+      propertyPath: inventoryTextBoxPrefab
+      value: 
+      objectReference: {fileID: 3788482065017111071, guid: 7533fd72178200749b9e5b6f14b12abe, type: 3}
     - target: {fileID: 7561426099796993584, guid: e7ee3c49414a0c84d997b0c9aa71b978, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -309,6 +313,7 @@ MonoBehaviour:
   - {fileID: 651108434}
   - {fileID: 1345823283}
   - {fileID: 1659063502}
+  inventoryTextBoxGameObject: {fileID: 0}
   inventoryBarDraggedItem: {fileID: 7940521233011832537, guid: f221e8bb45eb6e74b851185687abbb1a, type: 3}
 --- !u!114 &78412010
 MonoBehaviour:
@@ -379,6 +384,10 @@ PrefabInstance:
       propertyPath: inventoryBar
       value: 
       objectReference: {fileID: 78412009}
+    - target: {fileID: 7353549039014893590, guid: e7ee3c49414a0c84d997b0c9aa71b978, type: 3}
+      propertyPath: inventoryTextBoxPrefab
+      value: 
+      objectReference: {fileID: 3788482065017111071, guid: 7533fd72178200749b9e5b6f14b12abe, type: 3}
     - target: {fileID: 7561426099796993584, guid: e7ee3c49414a0c84d997b0c9aa71b978, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -553,6 +562,10 @@ PrefabInstance:
       propertyPath: inventoryBar
       value: 
       objectReference: {fileID: 78412009}
+    - target: {fileID: 7353549039014893590, guid: e7ee3c49414a0c84d997b0c9aa71b978, type: 3}
+      propertyPath: inventoryTextBoxPrefab
+      value: 
+      objectReference: {fileID: 3788482065017111071, guid: 7533fd72178200749b9e5b6f14b12abe, type: 3}
     - target: {fileID: 7561426099796993584, guid: e7ee3c49414a0c84d997b0c9aa71b978, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -663,6 +676,10 @@ PrefabInstance:
       propertyPath: inventoryBar
       value: 
       objectReference: {fileID: 78412009}
+    - target: {fileID: 7353549039014893590, guid: e7ee3c49414a0c84d997b0c9aa71b978, type: 3}
+      propertyPath: inventoryTextBoxPrefab
+      value: 
+      objectReference: {fileID: 3788482065017111071, guid: 7533fd72178200749b9e5b6f14b12abe, type: 3}
     - target: {fileID: 7561426099796993584, guid: e7ee3c49414a0c84d997b0c9aa71b978, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -773,6 +790,10 @@ PrefabInstance:
       propertyPath: inventoryBar
       value: 
       objectReference: {fileID: 78412009}
+    - target: {fileID: 7353549039014893590, guid: e7ee3c49414a0c84d997b0c9aa71b978, type: 3}
+      propertyPath: inventoryTextBoxPrefab
+      value: 
+      objectReference: {fileID: 3788482065017111071, guid: 7533fd72178200749b9e5b6f14b12abe, type: 3}
     - target: {fileID: 7561426099796993584, guid: e7ee3c49414a0c84d997b0c9aa71b978, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -894,6 +915,10 @@ PrefabInstance:
       propertyPath: inventoryBar
       value: 
       objectReference: {fileID: 78412009}
+    - target: {fileID: 7353549039014893590, guid: e7ee3c49414a0c84d997b0c9aa71b978, type: 3}
+      propertyPath: inventoryTextBoxPrefab
+      value: 
+      objectReference: {fileID: 3788482065017111071, guid: 7533fd72178200749b9e5b6f14b12abe, type: 3}
     - target: {fileID: 7561426099796993584, guid: e7ee3c49414a0c84d997b0c9aa71b978, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1015,6 +1040,10 @@ PrefabInstance:
       propertyPath: inventoryBar
       value: 
       objectReference: {fileID: 78412009}
+    - target: {fileID: 7353549039014893590, guid: e7ee3c49414a0c84d997b0c9aa71b978, type: 3}
+      propertyPath: inventoryTextBoxPrefab
+      value: 
+      objectReference: {fileID: 3788482065017111071, guid: 7533fd72178200749b9e5b6f14b12abe, type: 3}
     - target: {fileID: 7561426099796993584, guid: e7ee3c49414a0c84d997b0c9aa71b978, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1136,6 +1165,10 @@ PrefabInstance:
       propertyPath: inventoryBar
       value: 
       objectReference: {fileID: 78412009}
+    - target: {fileID: 7353549039014893590, guid: e7ee3c49414a0c84d997b0c9aa71b978, type: 3}
+      propertyPath: inventoryTextBoxPrefab
+      value: 
+      objectReference: {fileID: 3788482065017111071, guid: 7533fd72178200749b9e5b6f14b12abe, type: 3}
     - target: {fileID: 7561426099796993584, guid: e7ee3c49414a0c84d997b0c9aa71b978, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1607,6 +1640,10 @@ PrefabInstance:
       propertyPath: inventoryBar
       value: 
       objectReference: {fileID: 78412009}
+    - target: {fileID: 7353549039014893590, guid: e7ee3c49414a0c84d997b0c9aa71b978, type: 3}
+      propertyPath: inventoryTextBoxPrefab
+      value: 
+      objectReference: {fileID: 3788482065017111071, guid: 7533fd72178200749b9e5b6f14b12abe, type: 3}
     - target: {fileID: 7561426099796993584, guid: e7ee3c49414a0c84d997b0c9aa71b978, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1728,6 +1765,10 @@ PrefabInstance:
       propertyPath: inventoryBar
       value: 
       objectReference: {fileID: 78412009}
+    - target: {fileID: 7353549039014893590, guid: e7ee3c49414a0c84d997b0c9aa71b978, type: 3}
+      propertyPath: inventoryTextBoxPrefab
+      value: 
+      objectReference: {fileID: 3788482065017111071, guid: 7533fd72178200749b9e5b6f14b12abe, type: 3}
     - target: {fileID: 7561426099796993584, guid: e7ee3c49414a0c84d997b0c9aa71b978, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2098,6 +2139,10 @@ PrefabInstance:
       propertyPath: inventoryBar
       value: 
       objectReference: {fileID: 78412009}
+    - target: {fileID: 7353549039014893590, guid: e7ee3c49414a0c84d997b0c9aa71b978, type: 3}
+      propertyPath: inventoryTextBoxPrefab
+      value: 
+      objectReference: {fileID: 3788482065017111071, guid: 7533fd72178200749b9e5b6f14b12abe, type: 3}
     - target: {fileID: 7561426099796993584, guid: e7ee3c49414a0c84d997b0c9aa71b978, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2945,6 +2990,10 @@ PrefabInstance:
       propertyPath: inventoryBar
       value: 
       objectReference: {fileID: 78412009}
+    - target: {fileID: 7353549039014893590, guid: e7ee3c49414a0c84d997b0c9aa71b978, type: 3}
+      propertyPath: inventoryTextBoxPrefab
+      value: 
+      objectReference: {fileID: 3788482065017111071, guid: 7533fd72178200749b9e5b6f14b12abe, type: 3}
     - target: {fileID: 7561426099796993584, guid: e7ee3c49414a0c84d997b0c9aa71b978, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

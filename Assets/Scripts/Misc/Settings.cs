@@ -2,9 +2,10 @@ using UnityEngine;
 
 public static class Settings
 {
+    #region Player Running & Walking Speed
     public const float runningSpeed = 5.333f;
     public const float walkingSpeed = 2.666f;
-
+    #endregion
 
     #region Item Fade
     public const float fadeInSecond = 0.25f;
@@ -12,10 +13,12 @@ public static class Settings
     public const float targetAlpha = 0.45f;
     #endregion
 
+    #region basic Inventory Capacity
     public static int playerInitialInventoryCapacity = 24;
     public static int playerMaxInventoryCapacity = 48;
+    #endregion
 
-    // 创建散列值，用于对应玩家动画的Parameter
+    #region 创建散列值，用于对应玩家动画的Parameter
     public static int xInput;
     public static int yInput;
     public static int isWalking;
@@ -48,6 +51,14 @@ public static class Settings
     public static int idleDown;
     public static int idleLeft;
     public static int idleRight;
+    #endregion
+
+    public const string HoeingTool = "Hoe";
+    public const string ChoppingTool = "Axe";
+    public const string BreakingTool = "Pickaxe";
+    public const string ReapingTool = "Scythe";
+    public const string WateringTool = "Watering Can";
+    public const string CollectingTool = "Basket";
 
 
 
