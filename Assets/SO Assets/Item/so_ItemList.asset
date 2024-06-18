@@ -66,7 +66,7 @@ MonoBehaviour:
   - itemCode: 10004
     itemType: 3
     itemDescription: A Basic Hoe
-    itemSprite: {fileID: 0}
+    itemSprite: {fileID: 21300052, guid: 853ac38383c680342ac7e688bf29b197, type: 3}
     itemLongDescription: A Basic Hoe for farmer to plant
     itemUseGridRadius: 1
     itemUseRadius: 0
