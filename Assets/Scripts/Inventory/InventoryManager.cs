@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class InventoryManager : SingletonMonobehavior<InventoryManager>
 {
-    private Dictionary<int, ItemDetails> itemDetailsDictionary;
-    public List<InventoryItem>[] inventoryLists;
+    private Dictionary<int, ItemDetails> itemDetailsDictionary; //键盘为itemCode的物品详情字典
+    public List<InventoryItem>[] inventoryLists;                //背包
 
     [HideInInspector]
-    public int[] inventoryListCapacityArray; 
+    public int[] inventoryListCapacityArray;            // 用于标识背包的容量
 
-    [SerializeField] private SO_ItemList itemList=null;
+    [SerializeField] private SO_ItemList itemList=null; // 读取SO文件 
+
+    private int[] selectedInventoryItem;                // 用于追踪选中的背包
 
 
 
@@ -21,6 +23,11 @@ public class InventoryManager : SingletonMonobehavior<InventoryManager>
 
         CreateInventoryLists();
         CreateItemDetailsDictionary();
+        selectedInventoryItem = new int[(int)InventoryLocation.Count];
+        for(int i = 0; i < (int)InventoryLocation.Count; ++i)
+        {
+            selectedInventoryItem[i] = -1;
+        }
 
     }
 
@@ -141,7 +148,7 @@ public class InventoryManager : SingletonMonobehavior<InventoryManager>
     /// </summary>
     /// <param name="inventoryLocation"></param>
     /// <param name="itemCode"></param>
-    internal void RemoveItem(InventoryLocation inventoryLocation, int itemCode)
+    public void RemoveItem(InventoryLocation inventoryLocation, int itemCode)
     {
         List<InventoryItem> inventoryList = inventoryLists[(int)inventoryLocation];
         int itemPosition = FindItemInventory(inventoryLocation, itemCode);
@@ -196,7 +203,7 @@ public class InventoryManager : SingletonMonobehavior<InventoryManager>
     /// <param name="inventoryLocation"></param>
     /// <param name="itemCode"></param>
     /// <returns></returns>
-    private int FindItemInventory(InventoryLocation inventoryLocation, int itemCode)
+    public int FindItemInventory(InventoryLocation inventoryLocation, int itemCode)
     {
         List<InventoryItem> inventoryItems = inventoryLists[(int)inventoryLocation];
         for(int i = 0; i < inventoryItems.Count; ++i)
@@ -225,8 +232,23 @@ public class InventoryManager : SingletonMonobehavior<InventoryManager>
         inventoryItems[dstSlotID] = srcInventoryItem;
         EventHandler.CallInventoryUpdateEvent(inventoryLocation, inventoryLists[(int)inventoryLocation]);
 
-
     }
+    
+    public void SetSelectInventoryItem(InventoryLocation inventoryLocation, int itemCode)
+    {
+        selectedInventoryItem[(int)inventoryLocation] = itemCode;
+    }
+
+    /// <summary>
+    /// 将对应背包选中的idx取消
+    /// </summary>
+    /// <param name="inventoryLocation"></param>
+    public void ClearSelectInventoryItem(InventoryLocation inventoryLocation)
+    {
+        selectedInventoryItem[(int)inventoryLocation] = -1;
+    }
+
+
 
     //private void DebugPrintInventoryList(List<InventoryItem> inventoryItems)
     //{

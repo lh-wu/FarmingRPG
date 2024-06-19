@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 using UnityEngine;
 using System;
 
-public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEndDragHandler,IPointerEnterHandler,IPointerExitHandler
+public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEndDragHandler,IPointerEnterHandler,IPointerExitHandler,IPointerClickHandler
 {
     private Camera mainCamera;
     private GameObject draggedItem;
@@ -20,6 +20,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEn
     [SerializeField] private GameObject itemPrefab = null;
     [HideInInspector] public ItemDetails itemDetails;
     [HideInInspector] public int itemQuantity;
+    [HideInInspector] public bool isSelected = false;
     [SerializeField] private int slotID = 0;
 
     private void Awake()
@@ -44,6 +45,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEn
             draggedItem = Instantiate(inventoryBar.inventoryBarDraggedItem, inventoryBar.transform);
             Image draggedItemImage = draggedItem.GetComponentInChildren<Image>();
             draggedItemImage.sprite = inventorySlotImage.sprite;
+            SetSelectedItem();
         }
     }
 
@@ -74,6 +76,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEn
                     InventoryManager.Instance.SwapUIInventorySlot(InventoryLocation.Player,slotID, dstSlotID);
                 }
                 DestroyInventoryTextBox();
+                ClearSelectedItem();
             }
             else
             {
@@ -88,7 +91,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEn
 
     private void DropSelectedItemAtMousePosition()
     {
-        if (itemDetails != null)
+        if (itemDetails != null && isSelected == true)
         {
             //根据camera和鼠标位置，确定要放置的item的位置
             Vector3 worldPosition = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -mainCamera.transform.position.z));
@@ -99,6 +102,10 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEn
 
             //从玩家背包中减少对应物品的数量
             InventoryManager.Instance.RemoveItem(InventoryLocation.Player, item.ItemCode);
+            if (InventoryManager.Instance.FindItemInventory(InventoryLocation.Player, item.ItemCode) == -1)
+            {
+                ClearSelectedItem();
+            }
         }
     }
 
@@ -140,5 +147,34 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEn
         {
             Destroy(inventoryBar.inventoryTextBoxGameObject);
         }
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if(eventData.button == PointerEventData.InputButton.Left)
+        {
+            if (isSelected == true){ClearSelectedItem();}
+            else
+            {
+                if (itemQuantity > 0){SetSelectedItem();}
+            }
+        }
+
+    }
+
+    private void SetSelectedItem()
+    {
+        inventoryBar.ClearHighlightOnInventorySlots();
+        isSelected = true;
+        inventoryBar.SetHighlightInventorySlots();
+        InventoryManager.Instance.SetSelectInventoryItem(InventoryLocation.Player, itemDetails.itemCode);
+    }
+
+    private void ClearSelectedItem()
+    {
+        inventoryBar.ClearHighlightOnInventorySlots();
+        // 上侧函数与下侧两语句定位有重合
+        isSelected = false;
+        InventoryManager.Instance.ClearSelectInventoryItem(InventoryLocation.Player);
     }
 }

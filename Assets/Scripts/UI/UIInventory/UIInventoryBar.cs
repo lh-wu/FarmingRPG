@@ -91,6 +91,7 @@ public class UIInventoryBar : MonoBehaviour
                             inventorySlots[i].textMeshProUGUI.text = inventoryList[i].itemQuantity.ToString();
                             inventorySlots[i].itemDetails = itemDetails;
                             inventorySlots[i].itemQuantity = inventoryList[i].itemQuantity;
+                            SetHighlightInventorySlots(i);
                         }
                     }
                     else
@@ -113,8 +114,58 @@ public class UIInventoryBar : MonoBehaviour
                 inventorySlots[i].itemDetails = null;
                 inventorySlots[i].inventorySlotImage.sprite = blank16x16sprite;
                 inventorySlots[i].textMeshProUGUI.text = "";
+                SetHighlightInventorySlots(i);
             }
         }
     }
 
+
+    /// <summary>
+    /// 遍历主界面背包的所有格子(slot)，把其设置为未选中状态，并将slot的highlight的贴图颜色设置为透明
+    /// 并调用InventoryManager方法ClearSelectInventoryItem
+    /// </summary>
+    public void ClearHighlightOnInventorySlots()
+    {
+        if (inventorySlots.Length > 0)
+        {
+            for(int i = 0; i < inventorySlots.Length; ++i)
+            {
+                if(inventorySlots[i].isSelected == true)
+                {
+                    inventorySlots[i].isSelected = false;
+                    inventorySlots[i].inventorySlotHighlight.color = new Color(0f, 0f, 0f, 0f);
+                    InventoryManager.Instance.ClearSelectInventoryItem(InventoryLocation.Player);
+                }
+            }
+        }
+    }
+
+
+    public void SetHighlightInventorySlots()
+    {
+        if (inventorySlots.Length > 0)
+        {
+            for (int i = 0; i < inventorySlots.Length; ++i)
+            {
+                SetHighlightInventorySlots(i);
+            }
+        }
+    }
+
+
+    /// <summary>
+    /// 检查该slot的isSelected属性，并将其Highlight框设置为原来的颜色，并调用InventoryManager方法SetSelectInventoryItem
+    /// </summary>
+    /// <param name="i"></param>
+    public void SetHighlightInventorySlots(int i)
+    {
+        if(inventorySlots.Length>0 && inventorySlots[i].itemDetails != null)
+        {
+            if (inventorySlots[i].isSelected)
+            {
+                inventorySlots[i].inventorySlotHighlight.color = new Color(1f, 1f, 1f, 1f);
+                InventoryManager.Instance.SetSelectInventoryItem(InventoryLocation.Player, inventorySlots[i].itemDetails.itemCode);
+            }
+        }
+    }
 }
