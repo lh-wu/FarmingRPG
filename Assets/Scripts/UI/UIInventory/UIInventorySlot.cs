@@ -168,6 +168,17 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEn
         isSelected = true;
         inventoryBar.SetHighlightInventorySlots();
         InventoryManager.Instance.SetSelectInventoryItem(InventoryLocation.Player, itemDetails.itemCode);
+
+        // 根据该物体是否可被carry，调用对应方法
+        if (itemDetails.canCarry == true)
+        {
+            PlayerController.Instance.ShowCarriedItem(itemDetails.itemCode);
+        }
+        else
+        {
+            PlayerController.Instance.ClearCarriedItem();
+        }
+
     }
 
     private void ClearSelectedItem()
@@ -176,5 +187,6 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEn
         // 上侧函数与下侧两语句定位有重合
         isSelected = false;
         InventoryManager.Instance.ClearSelectInventoryItem(InventoryLocation.Player);
+        PlayerController.Instance.ClearCarriedItem();
     }
 }

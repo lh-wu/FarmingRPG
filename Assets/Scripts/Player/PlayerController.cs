@@ -28,6 +28,16 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
 
     private Camera mainCamera;
 
+
+    private AnimationOverrides animationOverrides;
+    private List<CharacterAttribute> characterAttributeCustomisationList;
+
+    [Tooltip("Should be populated in the prefab with equipped item sprite renderer")]
+    [SerializeField] private SpriteRenderer equippedItemSpriteRenderer = null;
+
+    private CharacterAttribute armsCharacterAttribute;
+    private CharacterAttribute toolCharacterAttribute;
+
     public bool EnablePlayerInput
     {
         set { enablePlayerInput = value; }
@@ -39,6 +49,11 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
         base.Awake();
         rb = GetComponent<Rigidbody2D>();
         mainCamera = Camera.main;
+
+        animationOverrides = GetComponentInChildren<AnimationOverrides>();
+        armsCharacterAttribute = new CharacterAttribute(CharacterPartAnimator.Arms, PartVariantColor.none, PartVariantType.none);
+        characterAttributeCustomisationList = new List<CharacterAttribute>();
+
     }
 
     private void Update()
@@ -148,4 +163,35 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
         isRunning = false;
         isIdle = true;
     }
+
+    public void ShowCarriedItem(int itemCode)
+    {
+        ItemDetails itemDetails = InventoryManager.Instance.GetItemDetails(itemCode);
+        if (itemDetails != null)
+        {
+            // 将equippedItemSpriteRenderer设置为对应itemCode的sprite
+            equippedItemSpriteRenderer.sprite = itemDetails.itemSprite;
+            equippedItemSpriteRenderer.color = new Color(1f, 1f, 1f, 1f);
+            //添加到替换动画列表
+            armsCharacterAttribute.partVariantType = PartVariantType.carry;
+            characterAttributeCustomisationList.Clear();
+            characterAttributeCustomisationList.Add(armsCharacterAttribute);
+            animationOverrides.ApplyCharacterCustomisationParameters(characterAttributeCustomisationList);
+            isCarrying = true;
+        }
+    }
+
+    public void ClearCarriedItem()
+    {
+        equippedItemSpriteRenderer.sprite = null;
+        equippedItemSpriteRenderer.color = new Color(1f, 1f, 1f, 0f);
+        //添加到替换动画列表
+        armsCharacterAttribute.partVariantType = PartVariantType.none;
+        characterAttributeCustomisationList.Clear();
+        characterAttributeCustomisationList.Add(armsCharacterAttribute);
+        animationOverrides.ApplyCharacterCustomisationParameters(characterAttributeCustomisationList);
+        isCarrying = false;
+        
+    }
+
 }
