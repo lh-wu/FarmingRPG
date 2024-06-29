@@ -28,7 +28,7 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
 
     private Camera mainCamera;
 
-
+    #region 控制动画变体
     private AnimationOverrides animationOverrides;
     private List<CharacterAttribute> characterAttributeCustomisationList;
 
@@ -37,6 +37,7 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
 
     private CharacterAttribute armsCharacterAttribute;
     private CharacterAttribute toolCharacterAttribute;
+    #endregion
 
     public bool EnablePlayerInput
     {
@@ -50,7 +51,7 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
         rb = GetComponent<Rigidbody2D>();
         mainCamera = Camera.main;
 
-        animationOverrides = GetComponentInChildren<AnimationOverrides>();
+        animationOverrides = GetComponentInChildren<AnimationOverrides>();              // 该组件被attch到player下的一个子物体中
         armsCharacterAttribute = new CharacterAttribute(CharacterPartAnimator.Arms, PartVariantColor.none, PartVariantType.none);
         characterAttributeCustomisationList = new List<CharacterAttribute>();
 
@@ -164,6 +165,13 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
         isIdle = true;
     }
 
+    /// <summary>
+    /// InventorySlot中选中item的时候，将itemCode传入进来（仅在该item可carry的情况下）
+    /// 首先对player下子物体的equippedItemSpriteRenderer进行sprite赋值
+    /// 然后更新characterAttributeCustomisationList（即变体动画列表），并进行调用方法完成animator的动画替换
+    /// 调用在InventorySlot的SetSelectedItem中
+    /// </summary>
+    /// <param name="itemCode"></param>
     public void ShowCarriedItem(int itemCode)
     {
         ItemDetails itemDetails = InventoryManager.Instance.GetItemDetails(itemCode);

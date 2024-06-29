@@ -53,6 +53,8 @@ public static class Settings
     public static int idleRight;
     #endregion
 
+    public const float secondsPerGameSecond = 0.012f;
+
     public const string HoeingTool = "Hoe";
     public const string ChoppingTool = "Axe";
     public const string BreakingTool = "Pickaxe";
