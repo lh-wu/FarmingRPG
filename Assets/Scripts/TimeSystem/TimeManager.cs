@@ -34,11 +34,11 @@ public class TimeManager : SingletonMonobehavior<TimeManager>
         if (gameTick >= Settings.secondsPerGameSecond)
         {
             gameTick -= Settings.secondsPerGameSecond;
-            UpdataGameSecond();
+            UpdateGameSecond();
         }
     }
 
-    private void UpdataGameSecond()
+    private void UpdateGameSecond()
     {
         ++gameSecond;
         if (gameSecond > 59)
@@ -63,7 +63,12 @@ public class TimeManager : SingletonMonobehavior<TimeManager>
                             gs = 0;
                             gameSeason = Season.Spring;
                             ++gameYear;
+                            if (gameYear > 9999) { gameYear = 1; }
                             EventHandler.CallAdvanceGameYearEvent(gameYear, gameSeason, gameDay, gameDayOfWeek, gameHour, gameMinute, gameSecond);
+                        }
+                        else
+                        {
+                            gameSeason = (Season)gs;
                         }
                         EventHandler.CallAdvanceGameSeasonEvent(gameYear, gameSeason, gameDay, gameDayOfWeek, gameHour, gameMinute, gameSecond);
 
@@ -74,7 +79,7 @@ public class TimeManager : SingletonMonobehavior<TimeManager>
                 EventHandler.CallAdvanceGameHourEvent(gameYear, gameSeason, gameDay, gameDayOfWeek, gameHour, gameMinute, gameSecond);
             }
             EventHandler.CallAdvanceGameMinuteEvent(gameYear, gameSeason, gameDay, gameDayOfWeek, gameHour, gameMinute, gameSecond);
-            Debug.Log("GameYear:" + gameYear + " GameSeason:" + gameSeason + " GameDayOfWeek:" + gameDayOfWeek + " GameHour:" + gameHour + " GameMinute:" + gameMinute);
+            //Debug.Log("GameYear:" + gameYear + " GameSeason:" + gameSeason + " GameDayOfWeek:" + gameDayOfWeek + " GameHour:" + gameHour + " GameMinute:" + gameMinute);
         }
         // 如果有秒级的时间，则启用下面被注释的部分
         // EventHandler.CallAdvanceGameSecondEvent(gameYear, gameSeason, gameDay, gameDayOfWeek, gameHour, gameMinute, gameSecond);
@@ -98,10 +103,28 @@ public class TimeManager : SingletonMonobehavior<TimeManager>
                 return "Fri";
             case 6:
                 return "Sat";
-            case 7:
+            case 0:
                 return "Sun";
             default:
                 return "";
         }
     }
+
+    public void TestAdvanceGameMinute()
+    {
+        for (int i = 0; i < 60; ++i)
+        {
+            UpdateGameSecond();
+        }
+    }
+
+    public void TestAdvanceGameDay()
+    {
+        for (int i = 0; i < 86400; ++i)
+        {
+            UpdateGameSecond();
+        }
+    }
+
+
 }

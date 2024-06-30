@@ -64,7 +64,8 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
             #region Player Input
             ResetAnimationTriggers();
             PlayerMovementInput();
-            EventHandler.CallMovementEvent(inputX, inputY, isWalking, isRunning, isIdle, isCarrying, toolEffect, usingToolDirection, liftingToolDirection, pickingDirection, swingingToolDirection, idleDirection); 
+            EventHandler.CallMovementEvent(inputX, inputY, isWalking, isRunning, isIdle, isCarrying, toolEffect, usingToolDirection, liftingToolDirection, pickingDirection, swingingToolDirection, idleDirection);
+            PlayerTestInput();          // 用于测试快进时间
             #endregion
         }
 
@@ -201,5 +202,19 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
         isCarrying = false;
         
     }
+
+    private void PlayerTestInput()
+    {
+        if (Input.GetKey(KeyCode.T))
+        {
+            TimeManager.Instance.TestAdvanceGameMinute();
+        }
+        if (Input.GetKey(KeyCode.G))
+        {
+            TimeManager.Instance.TestAdvanceGameDay();
+        }
+    }
+
+
 
 }
