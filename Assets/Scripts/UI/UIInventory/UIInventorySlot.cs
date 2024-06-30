@@ -31,6 +31,23 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEn
     private void Start()
     {
         mainCamera = Camera.main;
+
+    }
+    private void OnEnable()
+    {
+        EventHandler.AfterSceneLoadEvent += SwitchParentItem;
+    }
+
+    private void OnDisable()
+    {
+        EventHandler.AfterSceneLoadEvent -= SwitchParentItem;
+    }
+
+    /// <summary>
+    /// 在场景切换的时候更改parentItem为当前场景下的item（一个游戏object，该场景的所有item都被放在其中）
+    /// </summary>
+    private void SwitchParentItem()
+    {
         parentItem = GameObject.FindGameObjectWithTag(Tags.ItemsParentTransform).transform;
     }
 
