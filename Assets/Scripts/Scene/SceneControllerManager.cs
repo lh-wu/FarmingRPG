@@ -20,6 +20,7 @@ public class SceneControllerManager : SingletonMonobehavior<SceneControllerManag
 
         yield return StartCoroutine(LoadSceneAndSetActive(startingSceneName.ToString()));   // 加载初始场景，并设置为活动
         EventHandler.CallAfterSceneLoadEvent();
+        SaveLoadManager.Instance.RestoreCurrentSceneData();
         StartCoroutine(Fade(0f));                                                           // 使场景可见
     }
 
@@ -41,6 +42,8 @@ public class SceneControllerManager : SingletonMonobehavior<SceneControllerManag
         EventHandler.CallBeforeSceneUnloadFadeOutEvent();
 
         yield return StartCoroutine(Fade(1f));
+
+        SaveLoadManager.Instance.StoreCurrentSceneData();
         PlayerController.Instance.gameObject.transform.position = spawnPosition;
 
         EventHandler.CallBeforeSceneUnloadEvent();
@@ -49,6 +52,7 @@ public class SceneControllerManager : SingletonMonobehavior<SceneControllerManag
         yield return StartCoroutine(LoadSceneAndSetActive(sceneName));                          //加载新场景
 
         EventHandler.CallAfterSceneLoadEvent();
+        SaveLoadManager.Instance.RestoreCurrentSceneData();
 
         yield return StartCoroutine(Fade(0f));
 

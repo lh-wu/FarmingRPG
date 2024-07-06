@@ -3,7 +3,7 @@ using System.Collections.Generic;
 [System.Serializable]
 public class GameObjectSave
 {
-    // keyΪsceneName
+    // key为SceneName
     public Dictionary<string, SceneSave> sceneData;
     public GameObjectSave()
     {

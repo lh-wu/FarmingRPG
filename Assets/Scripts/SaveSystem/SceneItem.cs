@@ -6,11 +6,11 @@ using UnityEngine;
 public class SceneItem
 {
     public int itemCode;
-    public Vecotr3Serializable position;
+    public Vector3Serializable position;
     public string itemName;
 
     public SceneItem()
     {
-        position = new Vecotr3Serializable();
+        position = new Vector3Serializable();
     }
 }
