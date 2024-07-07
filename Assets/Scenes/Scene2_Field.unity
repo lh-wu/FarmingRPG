@@ -13004,6 +13004,7 @@ GameObject:
   - component: {fileID: 3049281199910239251}
   - component: {fileID: 5169541827720882497}
   - component: {fileID: 3715062678663495727}
+  - component: {fileID: 5169541827720882498}
   m_Layer: 0
   m_Name: BoolDiggable
   m_TagString: Untagged
@@ -13022,6 +13023,7 @@ GameObject:
   - component: {fileID: 524814980503118716}
   - component: {fileID: 9033289123633518806}
   - component: {fileID: 26003111270726206}
+  - component: {fileID: 9033289123633518807}
   m_Layer: 0
   m_Name: BoolNPCObstacles
   m_TagString: Untagged
@@ -15588,6 +15590,7 @@ GameObject:
   - component: {fileID: 5009507927430527955}
   - component: {fileID: 7876160798092428759}
   - component: {fileID: 9178902640167222326}
+  - component: {fileID: 9178902640167222327}
   m_Layer: 0
   m_Name: BoolCanDropItem
   m_TagString: Untagged
@@ -15836,6 +15839,7 @@ GameObject:
   - component: {fileID: 8699725181837437198}
   - component: {fileID: 7361445015458862731}
   - component: {fileID: 4181643793907825165}
+  - component: {fileID: 8699725181837437199}
   m_Layer: 0
   m_Name: BoolPath
   m_TagString: Untagged
@@ -18321,6 +18325,7 @@ GameObject:
   - component: {fileID: 5090736484423935793}
   - component: {fileID: 2378298612400412444}
   - component: {fileID: 7254109433352903592}
+  - component: {fileID: 7254109433352903593}
   m_Layer: 0
   m_Name: BoolCanPlaceFumiture
   m_TagString: Untagged
@@ -18432,6 +18437,20 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &5169541827720882498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 815587099978859550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034185bfa67d48b4b9fb8cb3aecce90b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridProperties: {fileID: 11400000, guid: 04a4a9e366330da498e771b931113bd4, type: 2}
+  gridBoolProperty: 0
 --- !u!4 &5182516648435268840
 Transform:
   m_ObjectHideFlags: 0
@@ -45948,8 +45967,8 @@ Tilemap:
   - first: {x: 0, y: 0, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 59
-      m_TileSpriteIndex: 59
+      m_TileIndex: 38
+      m_TileSpriteIndex: 38
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -70733,7 +70752,7 @@ Tilemap:
     m_Data: {fileID: 11400000, guid: 60f677e3e5b77484993e8a7965e798a2, type: 2}
   - m_RefCount: 4
     m_Data: {fileID: 11400000, guid: 694afd2ab410ef24393043c05c72ca50, type: 2}
-  - m_RefCount: 2
+  - m_RefCount: 3
     m_Data: {fileID: 11400000, guid: bcccb68b178b63c489a8f5e28dad4422, type: 2}
   - m_RefCount: 1
     m_Data: {fileID: 11400000, guid: 7947a620a2f634c4ca023fc7e9a82cf3, type: 2}
@@ -70775,7 +70794,7 @@ Tilemap:
     m_Data: {fileID: 11400000, guid: 87a91771d840a9f45b1d46a268d669c9, type: 2}
   - m_RefCount: 2
     m_Data: {fileID: 11400000, guid: b36dd3be40a838546ac1fe29f9beb665, type: 2}
-  - m_RefCount: 6
+  - m_RefCount: 5
     m_Data: {fileID: 11400000, guid: 7c3f145c52ebc8e47a3c92af40de1cf8, type: 2}
   - m_RefCount: 1
     m_Data: {fileID: 11400000, guid: 9eaa26491cae24a49bdc7f0564e9e992, type: 2}
@@ -70948,7 +70967,7 @@ Tilemap:
     m_Data: {fileID: -3392252532062896653, guid: 0f48021b42b3b4342b1829669a8ec65d, type: 3}
   - m_RefCount: 4
     m_Data: {fileID: -8617968750023153866, guid: 0f48021b42b3b4342b1829669a8ec65d, type: 3}
-  - m_RefCount: 2
+  - m_RefCount: 3
     m_Data: {fileID: -4440883734908751995, guid: 0f48021b42b3b4342b1829669a8ec65d, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: 928069842403805531, guid: 0f48021b42b3b4342b1829669a8ec65d, type: 3}
@@ -70990,7 +71009,7 @@ Tilemap:
     m_Data: {fileID: -3908752820931214842, guid: 0f48021b42b3b4342b1829669a8ec65d, type: 3}
   - m_RefCount: 2
     m_Data: {fileID: -1015757676927180866, guid: 0f48021b42b3b4342b1829669a8ec65d, type: 3}
-  - m_RefCount: 6
+  - m_RefCount: 5
     m_Data: {fileID: -6928515709979390865, guid: 0f48021b42b3b4342b1829669a8ec65d, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: -362939001191586840, guid: 0f48021b42b3b4342b1829669a8ec65d, type: 3}
@@ -73038,6 +73057,20 @@ TilemapRenderer:
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!114 &7254109433352903593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4593572484009370392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034185bfa67d48b4b9fb8cb3aecce90b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridProperties: {fileID: 11400000, guid: 04a4a9e366330da498e771b931113bd4, type: 2}
+  gridBoolProperty: 2
 --- !u!1839735485 &7361445015458862731
 Tilemap:
   m_ObjectHideFlags: 0
@@ -73273,6 +73306,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8034502554150897151}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8699725181837437199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3227254639908560317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034185bfa67d48b4b9fb8cb3aecce90b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridProperties: {fileID: 11400000, guid: 04a4a9e366330da498e771b931113bd4, type: 2}
+  gridBoolProperty: 3
 --- !u!1839735485 &9033289123633518806
 Tilemap:
   m_ObjectHideFlags: 0
@@ -73311,6 +73358,20 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &9033289123633518807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 841886199804824642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034185bfa67d48b4b9fb8cb3aecce90b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridProperties: {fileID: 11400000, guid: 04a4a9e366330da498e771b931113bd4, type: 2}
+  gridBoolProperty: 4
 --- !u!1839735485 &9161608585393885882
 Tilemap:
   m_ObjectHideFlags: 0
@@ -73398,6 +73459,20 @@ TilemapRenderer:
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!114 &9178902640167222327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2219373207008545893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034185bfa67d48b4b9fb8cb3aecce90b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridProperties: {fileID: 11400000, guid: 04a4a9e366330da498e771b931113bd4, type: 2}
+  gridBoolProperty: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
