@@ -62,6 +62,7 @@ public static class Settings
     public const string WateringTool = "Watering Can";
     public const string CollectingTool = "Basket";
 
+    public const float gridCellSize = 1f;
 
 
     static Settings()

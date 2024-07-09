@@ -83,8 +83,7 @@ public class SceneItemsManager : SingletonMonobehavior<SceneItemsManager>, ISave
 
 
         SceneSave sceneSave = new SceneSave();
-        sceneSave.listSceneItemDictionary = new Dictionary<string, List<SceneItem>>();
-        sceneSave.listSceneItemDictionary.Add("sceneItemList", sceneItemList);
+        sceneSave.listSceneItem = sceneItemList;
         //把当前场景要保存的物体添加到GameObjectSave.sceneData中
         GameObjectSave.sceneData.Add(sceneName, sceneSave);
 
@@ -99,10 +98,10 @@ public class SceneItemsManager : SingletonMonobehavior<SceneItemsManager>, ISave
     {
         if(GameObjectSave.sceneData.TryGetValue(sceneName,out SceneSave sceneSave))
         {
-            if(sceneSave.listSceneItemDictionary!=null&&sceneSave.listSceneItemDictionary.TryGetValue("sceneItemList",out List<SceneItem> sceneItemList))
+            if(sceneSave.listSceneItem!=null)
             {
                 DestorySceneItems();
-                InstantiateSceneItems(sceneItemList);
+                InstantiateSceneItems(sceneSave.listSceneItem);
             }
         }
     }
@@ -139,5 +138,4 @@ public class SceneItemsManager : SingletonMonobehavior<SceneItemsManager>, ISave
         Item item = itemGameObject.GetComponent<Item>();
         item.Init(itemCode);
     }
-
 }

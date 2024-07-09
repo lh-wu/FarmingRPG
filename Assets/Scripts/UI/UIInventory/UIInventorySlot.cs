@@ -112,17 +112,26 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEn
         {
             //根据camera和鼠标位置，确定要放置的item的位置
             Vector3 worldPosition = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -mainCamera.transform.position.z));
-            GameObject itemGameObject = Instantiate(itemPrefab, worldPosition, Quaternion.identity, parentItem);
-            Item item = itemGameObject.GetComponent<Item>();
-            //只需要给该item传入itemcode即可，对应的初始化在item.cs中
-            item.ItemCode = itemDetails.itemCode;
 
-            //从玩家背包中减少对应物品的数量
-            InventoryManager.Instance.RemoveItem(InventoryLocation.Player, item.ItemCode);
-            if (InventoryManager.Instance.FindItemInventory(InventoryLocation.Player, item.ItemCode) == -1)
+            Vector3Int gridPosition = GridPropertiesManager.Instance.grid.WorldToCell(worldPosition);
+            GridPropertyDetails gridPropertyDetails = GridPropertiesManager.Instance.GetGridPropertyDetails(gridPosition.x, gridPosition.y);
+            if(gridPropertyDetails!=null&& gridPropertyDetails.canDropItem)
             {
-                ClearSelectedItem();
+                //-Settings.gridCellSize/2f是因为item的基准点在最底部，而跟随鼠标的时候是中心跟随鼠标
+                GameObject itemGameObject = Instantiate(itemPrefab, new Vector3(worldPosition.x, worldPosition.y-Settings.gridCellSize/2f, worldPosition.z), Quaternion.identity, parentItem);
+                Item item = itemGameObject.GetComponent<Item>();
+                //只需要给该item传入itemcode即可，对应的初始化在item.cs中
+                item.ItemCode = itemDetails.itemCode;
+
+                //从玩家背包中减少对应物品的数量
+                InventoryManager.Instance.RemoveItem(InventoryLocation.Player, item.ItemCode);
+                if (InventoryManager.Instance.FindItemInventory(InventoryLocation.Player, item.ItemCode) == -1)
+                {
+                    ClearSelectedItem();
+                }
+
             }
+
         }
     }
 
@@ -206,4 +215,5 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEn
         InventoryManager.Instance.ClearSelectInventoryItem(InventoryLocation.Player);
         PlayerController.Instance.ClearCarriedItem();
     }
+
 }
