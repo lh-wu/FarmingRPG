@@ -12,7 +12,7 @@ public class InventoryManager : SingletonMonobehavior<InventoryManager>
 
     [SerializeField] private SO_ItemList itemList=null; // 读取SO文件 
 
-    private int[] selectedInventoryItem;                // 用于追踪选中的背包
+    private int[] selectedInventoryItem;                // 用于标识每一个背包里面选中了哪个item，存储的为itemCode
 
 
 
@@ -216,9 +216,6 @@ public class InventoryManager : SingletonMonobehavior<InventoryManager>
     /// <summary>
     /// 交换inventoryLocation的背包的srcSlotID位置与dstSlotID的物品，不可与空的物体交换
     /// </summary>
-    /// <param name="inventoryLocation"></param>
-    /// <param name="srcSlotID"></param>
-    /// <param name="dstSlotID"></param>
     public void SwapUIInventorySlot(InventoryLocation inventoryLocation, int srcSlotID, int dstSlotID)
     {
         List<InventoryItem> inventoryItems = inventoryLists[(int)inventoryLocation];
@@ -248,6 +245,25 @@ public class InventoryManager : SingletonMonobehavior<InventoryManager>
         selectedInventoryItem[(int)inventoryLocation] = -1;
     }
 
+
+    /// <summary>
+    /// 返回inventoryLocation背包选中的物体的itemCode
+    /// </summary>
+    private int GetSelectedInventoryItem(InventoryLocation inventoryLocation)
+    {
+        return selectedInventoryItem[(int)inventoryLocation];
+    }
+
+
+    /// <summary>
+    /// 返回inventoryLocation背包选中的物体的itemDetails
+    /// </summary>
+    public ItemDetails GetSelectedInventoryItemDetails(InventoryLocation inventoryLocation)
+    {
+        int itemCode = GetSelectedInventoryItem(inventoryLocation);
+        if(itemCode == -1) { return null; }
+        else { return GetItemDetails(itemCode); }
+    }
 
 
     //private void DebugPrintInventoryList(List<InventoryItem> inventoryItems)
