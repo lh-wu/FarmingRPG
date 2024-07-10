@@ -10,6 +10,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEn
     private GameObject draggedItem;
     private Transform parentItem;           //当物品被拖到场景后，应该将其归类到parentItem的子目录里面(Hierachy界面)
     private Canvas parentCanvas;
+    private GridCursor gridCursor;
 
     public Image inventorySlotHighlight;
     public Image inventorySlotImage;
@@ -31,6 +32,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEn
     private void Start()
     {
         mainCamera = Camera.main;
+        gridCursor = GameObject.FindObjectOfType<GridCursor>();
 
     }
     private void OnEnable()
@@ -110,13 +112,11 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEn
     {
         if (itemDetails != null && isSelected == true)
         {
-            //根据camera和鼠标位置，确定要放置的item的位置
-            Vector3 worldPosition = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -mainCamera.transform.position.z));
-
-            Vector3Int gridPosition = GridPropertiesManager.Instance.grid.WorldToCell(worldPosition);
-            GridPropertyDetails gridPropertyDetails = GridPropertiesManager.Instance.GetGridPropertyDetails(gridPosition.x, gridPosition.y);
-            if(gridPropertyDetails!=null&& gridPropertyDetails.canDropItem)
+            if(gridCursor.CursorPositionIsValid)
             {
+                //根据camera和鼠标位置，确定要放置的item的位置
+                Vector3 worldPosition = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, 
+                    Input.mousePosition.y, -mainCamera.transform.position.z));
                 //-Settings.gridCellSize/2f是因为item的基准点在最底部，而跟随鼠标的时候是中心跟随鼠标
                 GameObject itemGameObject = Instantiate(itemPrefab, new Vector3(worldPosition.x, worldPosition.y-Settings.gridCellSize/2f, worldPosition.z), Quaternion.identity, parentItem);
                 Item item = itemGameObject.GetComponent<Item>();
@@ -190,11 +190,23 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEn
 
     private void SetSelectedItem()
     {
+        //重新设置高亮框
         inventoryBar.ClearHighlightOnInventorySlots();
         isSelected = true;
         inventoryBar.SetHighlightInventorySlots();
+        // 根据选中item的使用范围来决定是否启用gridCursor
+        gridCursor.ItemUseGridRadius = itemDetails.itemUseGridRadius;
+        if (itemDetails.itemUseGridRadius > 0)
+        {
+            gridCursor.EnableCursor();
+        }
+        else
+        {
+            gridCursor.DisableCursor();
+        }
+        gridCursor.SelectedItemType = itemDetails.itemType;
+        // 把选中物体的itemCode保存在InventoryManager的一个数组中
         InventoryManager.Instance.SetSelectInventoryItem(InventoryLocation.Player, itemDetails.itemCode);
-
         // 根据该物体是否可被carry，调用对应方法
         if (itemDetails.canCarry == true)
         {
@@ -210,10 +222,17 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEn
     private void ClearSelectedItem()
     {
         inventoryBar.ClearHighlightOnInventorySlots();
+        ClearCursor();
         // 上侧函数与下侧两语句定位有重合
         isSelected = false;
         InventoryManager.Instance.ClearSelectInventoryItem(InventoryLocation.Player);
         PlayerController.Instance.ClearCarriedItem();
+    }
+
+    private void ClearCursor()
+    {
+        gridCursor.DisableCursor();
+        gridCursor.SelectedItemType = ItemType.none;
     }
 
 }

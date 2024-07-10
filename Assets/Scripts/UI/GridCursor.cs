@@ -2,14 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
-using Unity.VisualScripting.Antlr3.Runtime.Tree;
 
 public class GridCursor : MonoBehaviour
 {
     private Canvas canvas;
     private Grid grid;
     private Camera mainCamera;
-    [SerializeField] private Image cursorImage = null;
+    [SerializeField] private Image cursorImage = null;                      //需要一个image组件作为容器，该image本身为none也可
     [SerializeField] private RectTransform cursorRectTransform = null;
     [SerializeField] private Sprite greenCursorSprite = null;
     [SerializeField] private Sprite redCursorSprite = null;
@@ -80,13 +79,14 @@ public class GridCursor : MonoBehaviour
     private void SetCursorValidity(Vector3Int cursorGridPosition, Vector3Int playerGridPosition)
     {
         SetCursorToValid();
+        // 超出使用范围，gridCursor变为红色
         if(Mathf.Abs(cursorGridPosition.x-playerGridPosition.x)>ItemUseGridRadius|| 
             Mathf.Abs(cursorGridPosition.y - playerGridPosition.y) > ItemUseGridRadius) 
         {
             SetCursorToInvalid();
             return;
         }
-
+        // 没有选中的物体，gridCursor变为红色
         ItemDetails itemDetails = InventoryManager.Instance.GetSelectedInventoryItemDetails(InventoryLocation.Player);
         if (itemDetails == null)
         {
@@ -132,13 +132,18 @@ public class GridCursor : MonoBehaviour
         grid = GameObject.FindObjectOfType<Grid>();
     }
 
-
+    /// <summary>
+    /// gridCursor设置为绿色
+    /// </summary>
     private void SetCursorToValid()
     {
         cursorImage.sprite = greenCursorSprite;
         CursorPositionIsValid = true;
     }
 
+    /// <summary>
+    /// gridCursor设置为红色
+    /// </summary>
     private void SetCursorToInvalid()
     {
         cursorImage.sprite = redCursorSprite;
@@ -161,7 +166,7 @@ public class GridCursor : MonoBehaviour
 
     public void EnableCursor()
     {
-        cursorImage.color = new Color(1f, 1f, 1f,1f);
+        cursorImage.color = new Color(1f, 1f, 1f, 1f);
         CursorIsEnable = true;
     }
 
