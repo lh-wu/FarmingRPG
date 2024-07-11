@@ -76,9 +76,9 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
             #region Player Input
             ResetAnimationTriggers();
             PlayerMovementInput();
+            PlayerClickInput();
             EventHandler.CallMovementEvent(inputX, inputY, isWalking, isRunning, isIdle, isCarrying, toolEffect, usingToolDirection, liftingToolDirection, pickingDirection, swingingToolDirection, idleDirection);
             PlayerTestInput();          // 用于测试快进时间
-            PlayerClickInput();
             #endregion
         }
 
@@ -237,10 +237,10 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
         if(playerToolUseDisable) { return; }
         if (Input.GetMouseButtonDown(0))
         {
-            Vector3Int cursorGridPosition = gridCursor.GetGridPositionForCursor();
-            Vector3Int playerGridPosition = gridCursor.GetGridPositionForPlayer();
             if (gridCursor.CursorIsEnable)
             {
+                Vector3Int cursorGridPosition = gridCursor.GetGridPositionForCursor();
+                Vector3Int playerGridPosition = gridCursor.GetGridPositionForPlayer();
                 ProcessPlayerClickInput(cursorGridPosition, playerGridPosition);
             }
         }
