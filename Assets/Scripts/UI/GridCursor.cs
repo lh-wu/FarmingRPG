@@ -65,13 +65,13 @@ public class GridCursor : MonoBehaviour
         }
     }
 
-    private Vector3Int GetGridPositionForCursor()
+    public Vector3Int GetGridPositionForCursor()
     {
         Vector3 cursorWorldPosition = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y,-mainCamera.transform.position.z));
         return grid.WorldToCell(cursorWorldPosition);
     }
 
-    private Vector3Int GetGridPositionForPlayer()
+    public Vector3Int GetGridPositionForPlayer()
     {
         return grid.WorldToCell(PlayerController.Instance.transform.position);
     }
@@ -110,6 +110,13 @@ public class GridCursor : MonoBehaviour
                     if (!IsCursorValidForCommodity(gridPropertyDetails))
                     {
                         SetCursorToInvalid(); return;
+                    }
+                    break;
+                case ItemType.HoeingTool:
+                    if (!IsCursorValidForTool(gridPropertyDetails, itemDetails))
+                    {
+                        SetCursorToInvalid();
+                        return;
                     }
                     break;
                 case ItemType.none:
@@ -158,6 +165,38 @@ public class GridCursor : MonoBehaviour
     {
         return gridPropertyDetails.canDropItem;
     }
+
+    private bool IsCursorValidForTool(GridPropertyDetails gridPropertyDetails, ItemDetails itemDetails)
+    {
+        switch (itemDetails.itemType)
+        {
+            case ItemType.HoeingTool:
+                if (gridPropertyDetails.isDiggable == true && gridPropertyDetails.daysSinceDug == -1)
+                {
+                    Vector3 cursorWorldPosition = new Vector3(GetWorldPositionForCursor().x + 0.5f, GetWorldPositionForCursor().y + 0.5f, 0f);
+                    List<Item> itemList = new List<Item>();
+                    HelperMethods.GetComponentsAtBoxLocation<Item>(out itemList, cursorWorldPosition, Settings.cursorSize, 0f);
+
+                    bool foundReapable = false;
+                    foreach (Item item in itemList)
+                    {
+                        if(InventoryManager.Instance.GetItemDetails(item.ItemCode).itemType == ItemType.ReapableScenary)
+                        {
+                            foundReapable = true;
+                            break;
+                        }
+                    }
+                    if(foundReapable) { return false; } else { return true; }
+                }
+                else
+                {
+                    return false;
+                }
+
+            default: return false;
+        }
+    }
+
     public void DisableCursor()
     {
         cursorImage.color = Color.clear;
@@ -175,6 +214,11 @@ public class GridCursor : MonoBehaviour
         Vector3 gridWorldPosition = grid.CellToWorld(gridPosition);
         Vector2 gridSceenPosition = mainCamera.WorldToScreenPoint(gridWorldPosition);
         return RectTransformUtility.PixelAdjustPoint(gridSceenPosition, cursorRectTransform, canvas);
+    }
+
+    public Vector3 GetWorldPositionForCursor()
+    {
+        return grid.CellToWorld(GetGridPositionForCursor());
     }
 
 }

@@ -63,6 +63,10 @@ public static class Settings
     public const string CollectingTool = "Basket";
 
     public const float gridCellSize = 1f;
+    public static Vector2 cursorSize = Vector2.one;
+
+    public static float useToolAnimationPause = 0.25f;
+    public static float afterUseToolAnimationPause = 0.2f;
 
 
     static Settings()
