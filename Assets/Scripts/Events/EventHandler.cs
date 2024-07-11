@@ -66,6 +66,7 @@ public static class EventHandler
     }
     #endregion
 
+    #region ≥°æ∞«–ªªœ‡πÿ
     public static event Action BeforeSceneUnloadFadeOutEvent;
     public static void CallBeforeSceneUnloadFadeOutEvent()
     {
@@ -89,6 +90,11 @@ public static class EventHandler
     {
         AfterSceneLoadFadeInEvent?.Invoke();
     }
+    #endregion
 
-
+    public static event Action DropSelectedItemEvent;
+    public static void CallDropSelectedItemEvent()
+    {
+        DropSelectedItemEvent?.Invoke();
+    }
 }
