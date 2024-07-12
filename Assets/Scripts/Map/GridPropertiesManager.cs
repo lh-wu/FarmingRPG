@@ -1,15 +1,20 @@
 using System.Collections.Generic;
+using UnityEngine.Tilemaps;
 using UnityEngine;
 
 [RequireComponent(typeof(GenerateGUID))]
 public class GridPropertiesManager : SingletonMonobehavior<GridPropertiesManager>,ISaveable
 {
-    public Grid grid;
+    private Grid grid;
+    private Tilemap groundDecoration1;
+    private Tilemap groundDecoration2;
 
     // 该字段仅保存当前场景的GridPropertyDetails
     private Dictionary<string, GridPropertyDetails> gridPropertyDictionary;
     // 从SO文件中读取所有场景的GridProperty
     [SerializeField] private SO_GridProperties[] so_gridPropertiesArray = null;
+
+    [SerializeField] private Tile[] dugGround = null;
 
     private string _iSaveableUniqueID;
     public string ISaveableUniqueID { get { return _iSaveableUniqueID; } set { _iSaveableUniqueID = value; } }
@@ -77,6 +82,164 @@ public class GridPropertiesManager : SingletonMonobehavior<GridPropertiesManager
 
         }
     }
+    private void ClearDisplayGroundDecorations()
+    {
+        groundDecoration1.ClearAllTiles();
+        groundDecoration2.ClearAllTiles();
+    }
+
+    private void ClearDisplayGridPropertyDetails()
+    {
+        ClearDisplayGroundDecorations();
+        // TODO 清除其他属性
+    }
+
+
+    private void DisplayGridPropertyDetails()
+    {
+        foreach(KeyValuePair<string,GridPropertyDetails> item in gridPropertyDictionary)
+        {
+            GridPropertyDetails gridPropertyDetails = item.Value;
+            DisplayDugGround(gridPropertyDetails);
+        }
+    }
+
+    public void DisplayDugGround(GridPropertyDetails gridPropertyDetails)
+    {
+        if (gridPropertyDetails.daysSinceDug > -1)
+        {
+            ConnectDugGround(gridPropertyDetails);
+        }
+    }
+
+    /// <summary>
+    /// 设置传入tile的贴图和其周围四个tile 的贴图为已挖掘
+    /// </summary>
+    private void ConnectDugGround(GridPropertyDetails gridPropertyDetails)
+    {
+        // 对当前的tile进行设置
+        Tile dugTile0 = SetDugTile(gridPropertyDetails.gridX, gridPropertyDetails.gridY);
+        groundDecoration1.SetTile(new Vector3Int(gridPropertyDetails.gridX, gridPropertyDetails.gridY, 0), dugTile0);
+
+        GridPropertyDetails adjGirdPropertyDetails;
+        //由于设置了当前点，则该点附近的tile可能也需要设置
+        adjGirdPropertyDetails = GetGridPropertyDetails(gridPropertyDetails.gridX, gridPropertyDetails.gridY + 1);
+        if (adjGirdPropertyDetails != null && adjGirdPropertyDetails.daysSinceDug > -1)
+        {
+            Tile dugTile1 = SetDugTile(gridPropertyDetails.gridX, gridPropertyDetails.gridY+1);
+            groundDecoration1.SetTile(new Vector3Int(gridPropertyDetails.gridX, gridPropertyDetails.gridY+1, 0), dugTile1);
+        }
+
+        adjGirdPropertyDetails = GetGridPropertyDetails(gridPropertyDetails.gridX, gridPropertyDetails.gridY - 1);
+        if (adjGirdPropertyDetails != null && adjGirdPropertyDetails.daysSinceDug > -1)
+        {
+            Tile dugTile2 = SetDugTile(gridPropertyDetails.gridX, gridPropertyDetails.gridY - 1);
+            groundDecoration1.SetTile(new Vector3Int(gridPropertyDetails.gridX, gridPropertyDetails.gridY - 1, 0), dugTile2);
+        }
+
+        adjGirdPropertyDetails = GetGridPropertyDetails(gridPropertyDetails.gridX-1, gridPropertyDetails.gridY );
+        if (adjGirdPropertyDetails != null && adjGirdPropertyDetails.daysSinceDug > -1)
+        {
+            Tile dugTile3 = SetDugTile(gridPropertyDetails.gridX - 1, gridPropertyDetails.gridY);
+            groundDecoration1.SetTile(new Vector3Int(gridPropertyDetails.gridX - 1, gridPropertyDetails.gridY, 0), dugTile3);
+        }
+
+        adjGirdPropertyDetails = GetGridPropertyDetails(gridPropertyDetails.gridX + 1, gridPropertyDetails.gridY);
+        if (adjGirdPropertyDetails != null && adjGirdPropertyDetails.daysSinceDug > -1)
+        {
+            Tile dugTile4 = SetDugTile(gridPropertyDetails.gridX+1, gridPropertyDetails.gridY);
+            groundDecoration1.SetTile(new Vector3Int(gridPropertyDetails.gridX + 1, gridPropertyDetails.gridY, 0), dugTile4);
+        }
+
+    }
+
+    /// <summary>
+    /// 根据该tile和邻居的关系，设置该单个tile的挖掘贴图
+    /// </summary>
+    private Tile SetDugTile(int xGrid,int yGrid)
+    {
+        bool upDug = IsGridSquareDug(xGrid,yGrid+1);
+        bool downDug = IsGridSquareDug(xGrid, yGrid - 1);
+        bool leftDug = IsGridSquareDug(xGrid-1, yGrid);
+        bool rightDug = IsGridSquareDug(xGrid+1, yGrid);
+
+        if (!upDug && !downDug && !rightDug && !leftDug)
+        {
+            return dugGround[0];
+        }
+        else if(!upDug && downDug && rightDug && !leftDug)
+        {
+            return dugGround[1];
+        }
+        else if (!upDug && downDug && rightDug && leftDug)
+        {
+            return dugGround[2];
+        }
+        else if (!upDug && downDug && !rightDug && leftDug)
+        {
+            return dugGround[3];
+        }
+        else if (!upDug && downDug && !rightDug && !leftDug)
+        {
+            return dugGround[4];
+        }
+        else if (upDug && downDug && rightDug && !leftDug)
+        {
+            return dugGround[5];
+        }
+        else if (upDug && downDug && rightDug && leftDug)
+        {
+            return dugGround[6];
+        }
+        else if (upDug && downDug && !rightDug && leftDug)
+        {
+            return dugGround[7];
+        }
+        else if (upDug && downDug && !rightDug && !leftDug)
+        {
+            return dugGround[8];
+        }
+        else if (upDug && !downDug && rightDug && !leftDug)
+        {
+            return dugGround[9];
+        }
+        else if (upDug && !downDug && rightDug && leftDug)
+        {
+            return dugGround[10];
+        }
+        else if (upDug && !downDug && !rightDug && leftDug)
+        {
+            return dugGround[11];
+        }
+        else if (upDug && !downDug && !rightDug && !leftDug)
+        {
+            return dugGround[12];
+        }
+        else if (!upDug && !downDug && rightDug && !leftDug)
+        {
+            return dugGround[13];
+        }
+        else if (!upDug && !downDug && rightDug && leftDug)
+        {
+            return dugGround[14];
+        }
+        else if (!upDug && !downDug && !rightDug && leftDug)
+        {
+            return dugGround[15];
+        }
+        return null;
+    }
+
+    private bool IsGridSquareDug(int xGrid,int yGrid)
+    {
+        GridPropertyDetails gridPropertyDetails = GetGridPropertyDetails(xGrid, yGrid);
+        if(gridPropertyDetails != null && gridPropertyDetails.daysSinceDug > -1)
+        {
+            return true;
+        }
+        return false;
+    }
+
 
     private void OnEnable()
     {
@@ -114,6 +277,12 @@ public class GridPropertiesManager : SingletonMonobehavior<GridPropertiesManager
             if (sceneSave.gridPropertyDetailsDict != null)
             {
                 gridPropertyDictionary = sceneSave.gridPropertyDetailsDict;
+            }
+            //清除场景的挖掘贴图并进行更新
+            if (gridPropertyDictionary.Count > 0)
+            {
+                ClearDisplayGridPropertyDetails();
+                DisplayGridPropertyDetails();
             }
         }
     }
@@ -156,6 +325,8 @@ public class GridPropertiesManager : SingletonMonobehavior<GridPropertiesManager
     private void AfterSceneLoaded()
     {
         grid = GameObject.FindObjectOfType<Grid>();
+        groundDecoration1 = GameObject.FindGameObjectWithTag(Tags.GroundDecoration1).GetComponent<Tilemap>();
+        groundDecoration2 = GameObject.FindGameObjectWithTag(Tags.GroundDecoration2).GetComponent<Tilemap>();
     }
 
 }

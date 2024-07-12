@@ -358,6 +358,7 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
             gridPropertyDetails.daysSinceDug = 0;
         }
         GridPropertiesManager.Instance.SetGridPropertyDetails(gridPropertyDetails.gridX, gridPropertyDetails.gridY, gridPropertyDetails);
+        GridPropertiesManager.Instance.DisplayDugGround(gridPropertyDetails);
 
         yield return afterUseToolAnimationPause;
 
