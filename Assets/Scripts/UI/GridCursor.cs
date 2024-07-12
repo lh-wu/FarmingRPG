@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
+using Unity.VisualScripting;
 
 public class GridCursor : MonoBehaviour
 {
@@ -113,6 +114,7 @@ public class GridCursor : MonoBehaviour
                     }
                     break;
                 case ItemType.HoeingTool:
+                case ItemType.WateringTool:
                     if (!IsCursorValidForTool(gridPropertyDetails, itemDetails))
                     {
                         SetCursorToInvalid();
@@ -188,11 +190,13 @@ public class GridCursor : MonoBehaviour
                     }
                     if(foundReapable) { return false; } else { return true; }
                 }
-                else
+                else { return false; }
+            case ItemType.WateringTool:
+                if (gridPropertyDetails.daysSinceDug > -1 && gridPropertyDetails.daysSinceWatered == -1)
                 {
-                    return false;
+                    return true;
                 }
-
+                else { return false; }
             default: return false;
         }
     }
