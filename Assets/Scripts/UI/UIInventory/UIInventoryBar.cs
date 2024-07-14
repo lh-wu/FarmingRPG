@@ -36,7 +36,7 @@ public class UIInventoryBar : MonoBehaviour
     /// </summary>
     private void SwitchInventoryBarPosition()
     {
-        Vector3 playerViewPointPosition = PlayerController.Instance.GetPlayerPosition();
+        Vector3 playerViewPointPosition = PlayerController.Instance.GetPlayerViewPosition();
         if(playerViewPointPosition.y>0.3&& IsInventoryBarPositionBottom == false)
         {
             rectTransform.pivot = new Vector2(0.5f, 0f);

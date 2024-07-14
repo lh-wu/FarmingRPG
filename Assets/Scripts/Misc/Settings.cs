@@ -65,11 +65,14 @@ public static class Settings
     public const float gridCellSize = 1f;
     public static Vector2 cursorSize = Vector2.one;
 
+    #region 工具使用前后摇
     public static float useToolAnimationPause = 0.25f;
     public static float afterUseToolAnimationPause = 0.2f;
     public static float liftToolAnimationPause = 0.4f;
     public static float afterLiftToolAnimationPause = 0.4f;
+    #endregion
 
+    public static float playerCentreYOffset = 0.875f;
 
     static Settings()
     {

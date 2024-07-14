@@ -157,13 +157,17 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
     }
 
     /// <summary>
-    /// 返回玩家相对于相机的位置,忽略z的情况下，左下角为00 右上角为11
+    /// 返回玩家的视口位置,忽略z的情况下，左下角为00 右上角为11
     /// </summary>
-    /// <returns></returns>
-    public Vector3 GetPlayerPosition()
+    public Vector3 GetPlayerViewPosition()
     {
 
         return mainCamera.WorldToViewportPoint(transform.position);
+    }
+
+    public Vector3 GetPlayerCentrePosition()
+    {
+        return new Vector3(transform.position.x, transform.position.y + Settings.playerCentreYOffset, transform.position.z);
     }
 
 
@@ -405,7 +409,7 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
             gridPropertyDetails.daysSinceWatered = 0;
         }
         GridPropertiesManager.Instance.SetGridPropertyDetails(gridPropertyDetails.gridX, gridPropertyDetails.gridY, gridPropertyDetails);
-        // TODO GridPropertiesManager.Instance.DisplayWaterGround(gridPropertyDetails);
+        GridPropertiesManager.Instance.DisplayWateredGround(gridPropertyDetails);
 
         yield return afterLiftToolAnimationPause;
 

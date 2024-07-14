@@ -10,7 +10,9 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEn
     private GameObject draggedItem;
     private Transform parentItem;           //当物品被拖到场景后，应该将其归类到parentItem的子目录里面(Hierachy界面)
     private Canvas parentCanvas;
+
     private GridCursor gridCursor;
+    private Cursor cursor;
 
     public Image inventorySlotHighlight;
     public Image inventorySlotImage;
@@ -33,7 +35,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEn
     {
         mainCamera = Camera.main;
         gridCursor = GameObject.FindObjectOfType<GridCursor>();
-
+        cursor = GameObject.FindObjectOfType<Cursor>();
     }
     private void OnEnable()
     {
@@ -198,6 +200,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEn
         inventoryBar.SetHighlightInventorySlots();
         // 根据选中item的使用范围来决定是否启用gridCursor
         gridCursor.ItemUseGridRadius = itemDetails.itemUseGridRadius;
+        cursor.ItemUseRadius = itemDetails.itemUseRadius;
         if (itemDetails.itemUseGridRadius > 0)
         {
             gridCursor.EnableCursor();
@@ -206,7 +209,18 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEn
         {
             gridCursor.DisableCursor();
         }
+
+        if (itemDetails.itemUseRadius > 0f)
+        {
+            cursor.EnableCursor();
+        }
+        else
+        {
+            cursor.DisableCursor();
+        }
+
         gridCursor.SelectedItemType = itemDetails.itemType;
+        cursor.SelectedItemType = itemDetails.itemType;
         // 把选中物体的itemCode保存在InventoryManager的一个数组中
         InventoryManager.Instance.SetSelectInventoryItem(InventoryLocation.Player, itemDetails.itemCode);
         // 根据该物体是否可被carry，调用对应方法
@@ -225,7 +239,6 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEn
     {
         inventoryBar.ClearHighlightOnInventorySlots();
         ClearCursor();
-        // 上侧函数与下侧两语句定位有重合
         isSelected = false;
         InventoryManager.Instance.ClearSelectInventoryItem(InventoryLocation.Player);
         PlayerController.Instance.ClearCarriedItem();
@@ -235,6 +248,9 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEn
     {
         gridCursor.DisableCursor();
         gridCursor.SelectedItemType = ItemType.none;
+
+        cursor.DisableCursor();
+        cursor.SelectedItemType = ItemType.none;
     }
 
 }
