@@ -74,6 +74,9 @@ public static class Settings
 
     public static float playerCentreYOffset = 0.875f;
 
+    public const int maxCollidersToTestPerReapSwing = 15;
+    public const int maxTargetComponentsToDestoryPerReapSwing = 2;
+
     static Settings()
     {
         xInput = Animator.StringToHash("xInput");

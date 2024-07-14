@@ -28,6 +28,7 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
     private Camera mainCamera;
 
     private GridCursor gridCursor;
+    private Cursor cursor;
 
     private WaitForSeconds afterUseToolAnimationPause;
     private WaitForSeconds useToolAnimationPause;
@@ -60,6 +61,7 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
 
         animationOverrides = GetComponentInChildren<AnimationOverrides>();              // 该组件被attch到player下的一个子物体中
         armsCharacterAttribute = new CharacterAttribute(CharacterPartAnimator.Arms, PartVariantColor.none, PartVariantType.none);
+        toolCharacterAttribute = new CharacterAttribute(CharacterPartAnimator.Tool, PartVariantColor.none, PartVariantType.hoe);
         characterAttributeCustomisationList = new List<CharacterAttribute>();
 
     }
@@ -67,6 +69,7 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
     private void Start()
     {
         gridCursor = FindObjectOfType<GridCursor>();
+        cursor = FindObjectOfType<Cursor>();
         useToolAnimationPause = new WaitForSeconds(Settings.useToolAnimationPause);
         afterUseToolAnimationPause = new WaitForSeconds(Settings.afterUseToolAnimationPause);
         liftToolAnimationPause = new WaitForSeconds(Settings.liftToolAnimationPause);
@@ -94,6 +97,17 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
         rb.MovePosition(rb.position+ move);
     }
 
+
+    private void OnEnable()
+    {
+        EventHandler.BeforeSceneUnloadFadeOutEvent += DisablePlayerInputAndResetMovenment;
+        EventHandler.AfterSceneLoadFadeInEvent += EnablePlayerMovement;
+    }
+    private void OnDisable()
+    {
+        EventHandler.BeforeSceneUnloadFadeOutEvent -= DisablePlayerInputAndResetMovenment;
+        EventHandler.AfterSceneLoadFadeInEvent -= EnablePlayerMovement;
+    }
 
     private void PlayerMovementInput()
     {
@@ -178,6 +192,11 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
         EventHandler.CallMovementEvent(inputX, inputY, isWalking, isRunning, isIdle, isCarrying, toolEffect, usingToolDirection, liftingToolDirection, pickingDirection, swingingToolDirection, idleDirection);
     }
 
+    public void EnablePlayerMovement()
+    {
+        EnablePlayerInput = true;
+    }
+
     private void ResetMovement()
     {
         inputX = 0f;
@@ -245,7 +264,7 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
         if(playerToolUseDisable) { return; }
         if (Input.GetMouseButtonDown(0))
         {
-            if (gridCursor.CursorIsEnable)
+            if (gridCursor.CursorIsEnable||cursor.CursorIsEnable)
             {
                 Vector3Int cursorGridPosition = gridCursor.GetGridPositionForCursor();
                 Vector3Int playerGridPosition = gridCursor.GetGridPositionForPlayer();
@@ -279,6 +298,7 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
                     break;
                 case ItemType.HoeingTool:
                 case ItemType.WateringTool:
+                case ItemType.ReapingTool:
                     ProcessPlayerClickInputTool(gridPropertyDetails, itemDetails, playerDirection);
                     break;
                 case ItemType.none:
@@ -310,6 +330,32 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
         }
     }
 
+    private Vector3Int GetPlayerDirection(Vector3 cursorPosition, Vector3 playerPosition)
+    {
+        if(cursorPosition.x>playerPosition.x&&
+            cursorPosition.y<(playerPosition.y+cursor.ItemUseRadius/2f)&&
+            cursorPosition.y > (playerPosition.y - cursor.ItemUseRadius / 2f)
+            )
+        {
+            return Vector3Int.right;
+        }
+        else if (cursorPosition.x < playerPosition.x &&
+            cursorPosition.y < (playerPosition.y + cursor.ItemUseRadius / 2f) &&
+            cursorPosition.y > (playerPosition.y - cursor.ItemUseRadius / 2f)
+            )
+        {
+            return Vector3Int.left;
+        }
+        else if (cursorPosition.y > playerPosition.y)
+        {
+            return Vector3Int.up;
+        }
+        else
+        {
+            return Vector3Int.down;
+        }
+    }
+
     private void ProcessPlayerClickInputSeed(ItemDetails itemDetails)
     {
         if (itemDetails.canDrop && gridCursor.CursorPositionIsValid)
@@ -326,20 +372,27 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
         }
     }
 
-    private void ProcessPlayerClickInputTool(GridPropertyDetails gridPropertyDetails, ItemDetails itemDetails, Vector3Int playerDireciton)
+    private void ProcessPlayerClickInputTool(GridPropertyDetails gridPropertyDetails, ItemDetails itemDetails, Vector3Int playerDirection)
     {
         switch (itemDetails.itemType)
         {
             case ItemType.HoeingTool:
                 if(gridCursor.CursorPositionIsValid)
                 {
-                    HoeGroundAtCursor(gridPropertyDetails, playerDireciton);
+                    HoeGroundAtCursor(gridPropertyDetails, playerDirection);
                 }
                 break;
             case ItemType.WateringTool:
                 if (gridCursor.CursorPositionIsValid)
                 {
-                    WaterGroundAtCursor(gridPropertyDetails, playerDireciton);
+                    WaterGroundAtCursor(gridPropertyDetails, playerDirection);
+                }
+                break;
+            case ItemType.ReapingTool:
+                if (cursor.CursorPositionIsValid)
+                {
+                    playerDirection = GetPlayerDirection(cursor.GetWorldPositionForCursor(), GetPlayerCentrePosition());
+                    ReapInPlayerDirectAtCursor(itemDetails, playerDirection);
                 }
                 break;
             default: break;
@@ -415,6 +468,76 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
 
         enablePlayerInput = true;
         playerToolUseDisable = false;
+    }
+
+    private void ReapInPlayerDirectAtCursor(ItemDetails itemDetails, Vector3Int playerDireciton)
+    {
+        StartCoroutine(ReapInPlayerDirectAtCursorRoutine(itemDetails, playerDireciton));
+    }
+
+    private IEnumerator ReapInPlayerDirectAtCursorRoutine(ItemDetails itemDetails, Vector3Int playerDireciton)
+    {
+        enablePlayerInput = false;
+        playerToolUseDisable = true;
+
+        toolCharacterAttribute.partVariantType = PartVariantType.scythe;
+        characterAttributeCustomisationList.Clear();
+        characterAttributeCustomisationList.Add(toolCharacterAttribute);
+        animationOverrides.ApplyCharacterCustomisationParameters(characterAttributeCustomisationList);
+
+        UseToolInPlayerDirection(itemDetails, playerDireciton);
+        yield return useToolAnimationPause;
+
+        enablePlayerInput = true;
+        playerToolUseDisable = false;
+    }
+
+    private void UseToolInPlayerDirection(ItemDetails itemDetails,Vector3Int playerDirection)
+    {
+        if (Input.GetMouseButton(0))
+        {
+            switch (itemDetails.itemType)
+            {
+                case ItemType.ReapingTool:
+                    if (playerDirection == Vector3Int.right)
+                    {
+                        swingingToolDirection = SwingingToolDirection.Right;
+                    }
+                    else if(playerDirection == Vector3Int.left)
+                    {
+                        swingingToolDirection = SwingingToolDirection.Left;
+                    }
+                    else if (playerDirection == Vector3Int.up)
+                    {
+                        swingingToolDirection = SwingingToolDirection.Up;
+                    }
+                    else if (playerDirection == Vector3Int.down)
+                    {
+                        swingingToolDirection = SwingingToolDirection.Down;
+                    }
+                    break;
+            }
+            // 镰刀收割的范围为一个正方形，此处获取正方形的中心和大小
+            Vector2 point = new Vector2(GetPlayerCentrePosition().x + (playerDirection.x * (itemDetails.itemUseRadius / 2f)),
+                GetPlayerCentrePosition().y + playerDirection.y * (itemDetails.itemUseRadius / 2f));
+            Vector2 size = new Vector2(itemDetails.itemUseRadius, itemDetails.itemUseRadius);
+
+            Item[] itemArray = HelperMethods.GetComponentsAtBoxLocationNonAlloc<Item>(Settings.maxCollidersToTestPerReapSwing, point, size, 0f);
+            int reapableItemCount = 0;
+            for(int i = itemArray.Length - 1; i >= 0; --i)
+            {
+                if (itemArray[i] != null)
+                {
+                    if (InventoryManager.Instance.GetItemDetails(itemArray[i].ItemCode).itemType == ItemType.ReapableScenary)
+                    {
+                        Vector3 effectPosition = new Vector3(itemArray[i].transform.position.x, itemArray[i].transform.position.y + Settings.gridCellSize / 2f, itemArray[i].transform.position.z);
+                        Destroy(itemArray[i].gameObject);
+                        ++reapableItemCount;
+                        if (reapableItemCount > Settings.maxTargetComponentsToDestoryPerReapSwing) { break; }
+                    }
+                }
+            }
+        }
     }
 
 }
