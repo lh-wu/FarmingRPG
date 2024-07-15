@@ -521,7 +521,7 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
             Vector2 point = new Vector2(GetPlayerCentrePosition().x + (playerDirection.x * (itemDetails.itemUseRadius / 2f)),
                 GetPlayerCentrePosition().y + playerDirection.y * (itemDetails.itemUseRadius / 2f));
             Vector2 size = new Vector2(itemDetails.itemUseRadius, itemDetails.itemUseRadius);
-
+            // 获取收割范围内一定数量且具有collider的Item
             Item[] itemArray = HelperMethods.GetComponentsAtBoxLocationNonAlloc<Item>(Settings.maxCollidersToTestPerReapSwing, point, size, 0f);
             int reapableItemCount = 0;
             for(int i = itemArray.Length - 1; i >= 0; --i)
@@ -530,7 +530,10 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
                 {
                     if (InventoryManager.Instance.GetItemDetails(itemArray[i].ItemCode).itemType == ItemType.ReapableScenary)
                     {
+                        // 生成割草粒子特效
                         Vector3 effectPosition = new Vector3(itemArray[i].transform.position.x, itemArray[i].transform.position.y + Settings.gridCellSize / 2f, itemArray[i].transform.position.z);
+                        EventHandler.CallHarvestActionEffectEvent(effectPosition, HarvestActionEffect.reaping);
+                        // 删除该reapable的item
                         Destroy(itemArray[i].gameObject);
                         ++reapableItemCount;
                         if (reapableItemCount > Settings.maxTargetComponentsToDestoryPerReapSwing) { break; }
