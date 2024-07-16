@@ -104,4 +104,13 @@ public static class EventHandler
     {
         HarvestActionEffectEvent?.Invoke(effectPosition, harvestActionEffect);
     }
+
+
+    public static event Action RemoveSelectedItemFromInventoryEvent;
+    public static void CallRemoveSelectedItemFromInventoryEvent()
+    {
+        RemoveSelectedItemFromInventoryEvent?.Invoke();
+    }
+
+
 }

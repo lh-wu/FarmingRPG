@@ -6,6 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(GenerateGUID))]
 public class GridPropertiesManager : SingletonMonobehavior<GridPropertiesManager>,ISaveable
 {
+    private Transform cropsParentTransform;
     private Grid grid;
     private Tilemap groundDecoration1;
     private Tilemap groundDecoration2;
@@ -17,6 +18,9 @@ public class GridPropertiesManager : SingletonMonobehavior<GridPropertiesManager
 
     [SerializeField] private Tile[] dugGround = null;
     [SerializeField] private Tile[] wateredGround = null;
+
+    [SerializeField] private SO_CropDetailsList so_CropDetailsList = null;
+
 
     private string _iSaveableUniqueID;
     public string ISaveableUniqueID { get { return _iSaveableUniqueID; } set { _iSaveableUniqueID = value; } }
@@ -104,9 +108,20 @@ public class GridPropertiesManager : SingletonMonobehavior<GridPropertiesManager
         groundDecoration2.ClearAllTiles();
     }
 
+    private void ClearDisplayAllPlantedCrops()
+    {
+        Crop[] cropArray = FindObjectsOfType<Crop>();
+        foreach(Crop crop in cropArray)
+        {
+            Destroy(crop.gameObject);
+        }
+    }
+
+    // 清除dig、water、crop
     private void ClearDisplayGridPropertyDetails()
     {
         ClearDisplayGroundDecorations();
+        ClearDisplayAllPlantedCrops();
         // TODO 清除其他属性
     }
 
@@ -118,8 +133,44 @@ public class GridPropertiesManager : SingletonMonobehavior<GridPropertiesManager
             GridPropertyDetails gridPropertyDetails = item.Value;
             DisplayDugGround(gridPropertyDetails);
             DisplayWateredGround(gridPropertyDetails);
+            DisplayPlantedCrop(gridPropertyDetails);
         }
     }
+
+
+    public void DisplayPlantedCrop(GridPropertyDetails gridPropertyDetails)
+    {
+        if (gridPropertyDetails.seedItemCode > -1)
+        {
+            // 获取该tile上种植的作物信息
+            CropDetails cropDetails = so_CropDetailsList.GetCropDetails(gridPropertyDetails.seedItemCode);
+            // 根据作物的信息计算其处于的生长阶段
+            int growthStages = cropDetails.growthDays.Length;
+            int currentGrowthStage = 0;
+            int daysCounter = cropDetails.totalGrowthDays;
+            for(int i = growthStages - 1; i >= 0; --i)
+            {
+                if (gridPropertyDetails.growthDays >= daysCounter)
+                {
+                    currentGrowthStage = i;break;
+                }
+                daysCounter = daysCounter - cropDetails.growthDays[i];
+            }
+            // 由生长阶段获取对应的prefab和sprite
+            GameObject cropPrefab = cropDetails.growthPrefab[currentGrowthStage];
+            Sprite growthSprite = cropDetails.growthSprite[currentGrowthStage];
+            //
+            Vector3 worldPosition = groundDecoration2.CellToWorld(new Vector3Int(gridPropertyDetails.gridX, gridPropertyDetails.gridY, 0));
+            worldPosition = new Vector3(worldPosition.x + Settings.gridCellSize / 2, worldPosition.y, worldPosition.z);
+
+            GameObject cropInstance = Instantiate(cropPrefab, worldPosition, Quaternion.identity);
+            cropInstance.GetComponentInChildren<SpriteRenderer>().sprite = growthSprite;
+            cropInstance.transform.SetParent(cropsParentTransform);
+            cropInstance.GetComponent<Crop>().cropGridPosition = new Vector2Int(gridPropertyDetails.gridX, gridPropertyDetails.gridY);
+        }
+    }
+
+
 
     public void DisplayWateredGround(GridPropertyDetails gridPropertyDetails)
     {
@@ -465,6 +516,11 @@ public class GridPropertiesManager : SingletonMonobehavior<GridPropertiesManager
     private void AfterSceneLoaded()
     {
         grid = GameObject.FindObjectOfType<Grid>();
+        if (GameObject.FindGameObjectWithTag(Tags.CropsParentTransform)!=null)
+        {
+            cropsParentTransform = GameObject.FindGameObjectWithTag(Tags.CropsParentTransform).GetComponent<Transform>();
+        }
+        else { cropsParentTransform = null; }
         groundDecoration1 = GameObject.FindGameObjectWithTag(Tags.GroundDecoration1).GetComponent<Tilemap>();
         groundDecoration2 = GameObject.FindGameObjectWithTag(Tags.GroundDecoration2).GetComponent<Tilemap>();
     }

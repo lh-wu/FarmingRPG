@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 实现碰撞摇晃效果
+/// </summary>
 public class ItemNudge : MonoBehaviour
 {
     private WaitForSeconds pause;
