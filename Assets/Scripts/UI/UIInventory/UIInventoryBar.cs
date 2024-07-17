@@ -67,7 +67,7 @@ public class UIInventoryBar : MonoBehaviour
 
 
     /// <summary>
-    /// 首先判断是否更新了玩家背包，
+    /// 首先判断更新的背包是否为玩家背包，
     /// 是->清空SLot，根据inventoryList顺序为inventorySlots赋值
     /// </summary>
     /// <param name="inventoryLocation"></param>

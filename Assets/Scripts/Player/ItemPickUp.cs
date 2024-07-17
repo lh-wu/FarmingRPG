@@ -12,7 +12,7 @@ public class ItemPickUp : MonoBehaviour
             itemDetails = InventoryManager.Instance.GetItemDetails(item.ItemCode);
             if(itemDetails.canPickUp == true)
             {
-                InventoryManager.Instance.Additem(InventoryLocation.Player, item, collision.gameObject);
+                InventoryManager.Instance.AddItem(InventoryLocation.Player, item, collision.gameObject);
             }
             
         }

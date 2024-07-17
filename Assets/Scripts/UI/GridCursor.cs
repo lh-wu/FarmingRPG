@@ -13,6 +13,7 @@ public class GridCursor : MonoBehaviour
     [SerializeField] private RectTransform cursorRectTransform = null;
     [SerializeField] private Sprite greenCursorSprite = null;
     [SerializeField] private Sprite redCursorSprite = null;
+    [SerializeField] private SO_CropDetailsList so_cropDetailsList = null;
 
     private bool _cursorPositionIsValid = false;
     public bool CursorPositionIsValid { get { return _cursorPositionIsValid; }set { _cursorPositionIsValid = value; } }
@@ -200,6 +201,24 @@ public class GridCursor : MonoBehaviour
                     return true;
                 }
                 else { return false; }
+            case ItemType.CollectingTool:
+                if (gridPropertyDetails.seedItemCode != -1)
+                {
+                    // 获取cropDetails
+                    CropDetails cropDetails = so_cropDetailsList.GetCropDetails(gridPropertyDetails.seedItemCode);
+                    if (cropDetails != null)
+                    {
+                        // 判断是否成熟
+                        if (gridPropertyDetails.growthDays >= cropDetails.totalGrowthDays)
+                        {
+                            //判断是否可以使用该tool收割
+                            if (cropDetails.CanUseToolToHarvestCrop(itemDetails.itemCode)) { return true; }
+                            else { return false; }
+                        }
+                        else { return false; }
+                    }
+                }
+                return false;
             default: return false;
         }
     }

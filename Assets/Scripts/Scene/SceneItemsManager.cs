@@ -132,7 +132,7 @@ public class SceneItemsManager : SingletonMonobehavior<SceneItemsManager>, ISave
         }
     }
 
-    private void INstantiateSceneItem(int itemCode, Vector3 itemPosition)
+    public void InstantiateSceneItem(int itemCode, Vector3 itemPosition)
     {
         GameObject itemGameObject = Instantiate(itemPrefab, new Vector3(itemPosition.x, itemPosition.y, itemPosition.z), Quaternion.identity, parentItem);
         Item item = itemGameObject.GetComponent<Item>();

@@ -104,9 +104,9 @@ public class InventoryManager : SingletonMonobehavior<InventoryManager>
     /// <param name="inventoryLocation"></param>
     /// <param name="item"></param>
     /// <param name="gameObject"></param>
-    public void Additem(InventoryLocation inventoryLocation, Item item, GameObject gameObject)
+    public void AddItem(InventoryLocation inventoryLocation, Item item, GameObject gameObject)
     {
-        Additem(inventoryLocation, item);
+        AddItem(inventoryLocation, item);
         Destroy(gameObject);
     }
 
@@ -115,7 +115,7 @@ public class InventoryManager : SingletonMonobehavior<InventoryManager>
     /// </summary>
     /// <param name="inventoryLocation"></param>
     /// <param name="item"></param>
-    public void Additem(InventoryLocation inventoryLocation, Item item)
+    public void AddItem(InventoryLocation inventoryLocation, Item item)
     {
         int itemCode = item.ItemCode;
         List<InventoryItem> inventoryItems = inventoryLists[(int)inventoryLocation];
@@ -144,10 +144,29 @@ public class InventoryManager : SingletonMonobehavior<InventoryManager>
     }
 
     /// <summary>
-    /// 查找要删除的物品的位置，调用函数进行删除，并更新
+    /// 尝试直接向inventoryLocaiton的背包增加一个item
     /// </summary>
     /// <param name="inventoryLocation"></param>
     /// <param name="itemCode"></param>
+    public void AddItem(InventoryLocation inventoryLocation, int itemCode)
+    {
+        List<InventoryItem> inventoryList = inventoryLists[(int)inventoryLocation];
+        int itemPosition = FindItemInventory(inventoryLocation, itemCode);
+        if (itemPosition != -1)
+        {
+            AddItemAtPosition(inventoryList, itemCode, itemPosition);
+        }
+        else
+        {
+            AddItemAtPosition(inventoryList, itemCode);
+        }
+        EventHandler.CallInventoryUpdateEvent(inventoryLocation, inventoryLists[(int)inventoryLocation]);
+    }
+
+
+    /// <summary>
+    /// 查找要删除的物品的位置，调用函数进行删除，并更新
+    /// </summary>
     public void RemoveItem(InventoryLocation inventoryLocation, int itemCode)
     {
         List<InventoryItem> inventoryList = inventoryLists[(int)inventoryLocation];
@@ -264,6 +283,8 @@ public class InventoryManager : SingletonMonobehavior<InventoryManager>
         if(itemCode == -1) { return null; }
         else { return GetItemDetails(itemCode); }
     }
+
+
 
 
     //private void DebugPrintInventoryList(List<InventoryItem> inventoryItems)

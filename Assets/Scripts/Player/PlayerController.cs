@@ -34,6 +34,8 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
     private WaitForSeconds useToolAnimationPause;
     private WaitForSeconds afterLiftToolAnimationPause;
     private WaitForSeconds liftToolAnimationPause;
+    private WaitForSeconds pickAnimationPause;
+    private WaitForSeconds afterPickAnimationPause;
     private bool playerToolUseDisable = false;
 
     #region 控制动画变体
@@ -74,6 +76,8 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
         afterUseToolAnimationPause = new WaitForSeconds(Settings.afterUseToolAnimationPause);
         liftToolAnimationPause = new WaitForSeconds(Settings.liftToolAnimationPause);
         afterLiftToolAnimationPause = new WaitForSeconds(Settings.afterLiftToolAnimationPause);
+        pickAnimationPause = new WaitForSeconds(Settings.pickAnimationPause);
+        afterPickAnimationPause = new WaitForSeconds(Settings.afterPickAnimationPause);
     }
 
     private void Update()
@@ -299,6 +303,7 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
                 case ItemType.HoeingTool:
                 case ItemType.WateringTool:
                 case ItemType.ReapingTool:
+                case ItemType.CollectingTool:
                     ProcessPlayerClickInputTool(gridPropertyDetails, itemDetails, playerDirection);
                     break;
                 case ItemType.none:
@@ -397,6 +402,12 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
                 {
                     playerDirection = GetPlayerDirection(cursor.GetWorldPositionForCursor(), GetPlayerCentrePosition());
                     ReapInPlayerDirectAtCursor(itemDetails, playerDirection);
+                }
+                break;
+            case ItemType.CollectingTool:
+                if (gridCursor.CursorPositionIsValid)
+                {
+                    CollectInPlayerDirection(gridPropertyDetails, itemDetails, playerDirection);
                 }
                 break;
             default: break;
@@ -543,6 +554,63 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
                         if (reapableItemCount > Settings.maxTargetComponentsToDestoryPerReapSwing) { break; }
                     }
                 }
+            }
+        }
+    }
+
+    private void CollectInPlayerDirection(GridPropertyDetails gridPropertyDetails,ItemDetails itemDetails, Vector3Int playerDireciton)
+    {
+        StartCoroutine(CollectInPlayerDirectionRoutinue(gridPropertyDetails, itemDetails, playerDireciton));
+    }
+
+    IEnumerator CollectInPlayerDirectionRoutinue(GridPropertyDetails gridPropertyDetails,ItemDetails itemDetails,Vector3Int playerDirection)
+    {
+        EnablePlayerInput = false;
+        playerToolUseDisable = true;
+
+        ProcessCropWithEquippedItemInPlayerDireciton(playerDirection, itemDetails, gridPropertyDetails);
+
+        yield return pickAnimationPause;
+
+        yield return afterPickAnimationPause;
+
+        EnablePlayerInput = true;
+        playerToolUseDisable = false;
+    }
+
+    private void ProcessCropWithEquippedItemInPlayerDireciton(Vector3Int playerDirection, ItemDetails itemDetails, GridPropertyDetails gridPropertyDetails)
+    {
+        switch (itemDetails.itemType)
+        {
+            case ItemType.CollectingTool:
+                if (playerDirection == Vector3Int.right)
+                {
+                    pickingDirection = PickingDirection.Right;
+                }
+                else if (playerDirection == Vector3Int.left)
+                {
+                    pickingDirection= PickingDirection.Left;
+                }
+                else if(playerDirection == Vector3Int.up)
+                {
+                    pickingDirection = PickingDirection.Up;
+                }
+                else if (playerDirection == Vector3Int.down)
+                {
+                    pickingDirection = PickingDirection.Down;
+                }
+                break;
+            case ItemType.none:
+                break;
+        }
+        Crop crop = GridPropertiesManager.Instance.GetCropObjectAtGridLocation(gridPropertyDetails);
+        if (crop != null)
+        {
+            switch (itemDetails.itemType)
+            {
+                case ItemType.CollectingTool:
+                    crop.ProcessToolAction(itemDetails);
+                    break;
             }
         }
     }
