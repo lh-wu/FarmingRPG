@@ -538,7 +538,10 @@ public class GridPropertiesManager : SingletonMonobehavior<GridPropertiesManager
                     {
                         KeyValuePair<string, GridPropertyDetails> item = sceneSave.gridPropertyDetailsDict.ElementAt(i);
                         GridPropertyDetails gridPropertyDetails = item.Value;
+                        // 过天设置浇水状态为未浇水
                         if (gridPropertyDetails.daysSinceWatered > -1) { gridPropertyDetails.daysSinceWatered = -1; }
+                        // 将作物的生长天数+1
+                        if (gridPropertyDetails.growthDays > -1) { gridPropertyDetails.growthDays +=1; }
                         SetGridPropertyDetails(gridPropertyDetails.gridX, gridPropertyDetails.gridY, gridPropertyDetails, sceneSave.gridPropertyDetailsDict);
 
                     }

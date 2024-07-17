@@ -40,12 +40,14 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEn
     private void OnEnable()
     {
         EventHandler.AfterSceneLoadEvent += SwitchParentItem;
+        EventHandler.RemoveSelectedItemFromInventoryEvent += RemoveSelectedItemFromInventory;
         EventHandler.DropSelectedItemEvent += DropSelectedItemAtMousePosition;
     }
 
     private void OnDisable()
     {
         EventHandler.AfterSceneLoadEvent -= SwitchParentItem;
+        EventHandler.RemoveSelectedItemFromInventoryEvent -= RemoveSelectedItemFromInventory;
         EventHandler.DropSelectedItemEvent -= DropSelectedItemAtMousePosition;
     }
 
@@ -136,6 +138,19 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEn
 
             }
 
+        }
+    }
+
+    private void RemoveSelectedItemFromInventory()
+    {
+        if(itemDetails!= null && isSelected == true)
+        {
+            int itemCode = itemDetails.itemCode;
+            InventoryManager.Instance.RemoveItem(InventoryLocation.Player,itemCode);
+            if(InventoryManager.Instance.FindItemInventory(InventoryLocation.Player, itemCode) == -1)
+            {
+                ClearSelectedItem();
+            }
         }
     }
 
