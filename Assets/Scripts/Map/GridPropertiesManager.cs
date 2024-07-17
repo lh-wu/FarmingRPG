@@ -144,6 +144,8 @@ public class GridPropertiesManager : SingletonMonobehavior<GridPropertiesManager
         {
             // 获取该tile上种植的作物信息
             CropDetails cropDetails = so_CropDetailsList.GetCropDetails(gridPropertyDetails.seedItemCode);
+            // 再度检查，防止seed未被so文件收录
+            if (cropDetails == null) { return; }
             // 根据作物的信息计算其处于的生长阶段
             int growthStages = cropDetails.growthDays.Length;
             int currentGrowthStage = 0;

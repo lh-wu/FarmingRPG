@@ -609,7 +609,7 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
             switch (itemDetails.itemType)
             {
                 case ItemType.CollectingTool:
-                    crop.ProcessToolAction(itemDetails);
+                    crop.ProcessToolAction(itemDetails,pickingDirection);
                     break;
             }
         }
@@ -617,11 +617,15 @@ public class PlayerController : SingletonMonobehavior<PlayerController>
 
     private void PlantSeedAtCursor(GridPropertyDetails gridPropertyDetails,ItemDetails itemDetails)
     {
-        gridPropertyDetails.seedItemCode = itemDetails.itemCode;
-        gridPropertyDetails.growthDays = 0;
-        GridPropertiesManager.Instance.DisplayPlantedCrop(gridPropertyDetails);
+        // 判断该seed类型(ItemType)的东西，是否被定义于so文件中
+        if (GridPropertiesManager.Instance.GetCropDetails(itemDetails.itemCode) != null)
+        {
+            gridPropertyDetails.seedItemCode = itemDetails.itemCode;
+            gridPropertyDetails.growthDays = 0;
+            GridPropertiesManager.Instance.DisplayPlantedCrop(gridPropertyDetails);
 
-        EventHandler.CallRemoveSelectedItemFromInventoryEvent();
+            EventHandler.CallRemoveSelectedItemFromInventoryEvent();
+        }
     }
 
 }

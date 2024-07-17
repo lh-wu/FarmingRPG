@@ -16,12 +16,12 @@ public class CropDetails
     public Sprite harvestedSprite;      // 收获得到item的sprite
 
     public int harvestedTransformItemCode;                      // 当一个crop被收获后可以转变为另一种crop（例如树木和树桩）
-    public bool hideCropBeforeHarvestedAnimation;
+    public bool hideCropBeforeHarvestedAnimation;               // 在播放收获动画时是否隐藏原作物的sprite
     public bool disableCropCollidersBeforeHarvestedAnimation;
 
-    public bool isHarvestedAnimation;
+    public bool isHarvestedAnimation;                           // 是否有收获动画
     public bool isHarvestActionEffect = false;
-    public bool spawnCropProducedAtPlayerPosition;
+    public bool spawnCropProducedAtPlayerPosition;              // 掉落物是否直接生成到玩家背包中
     public HarvestActionEffect harvestActionEffect;
 
     [ItemCodeDescription]

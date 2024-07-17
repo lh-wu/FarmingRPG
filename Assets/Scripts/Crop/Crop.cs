@@ -7,10 +7,14 @@ public class Crop : MonoBehaviour
     [HideInInspector]
     public Vector2Int cropGridPosition;
 
+    [SerializeField] private SpriteRenderer cropHarvestedSpriteRenderer = null;
+
     private int harvestActionCount = 0;
 
-
-    public void ProcessToolAction(ItemDetails itemDetails)
+    /// <summary>
+    /// 对crop进行收割，重新设置该地块的信息，添加掉落物到背包
+    /// </summary>
+    public void ProcessToolAction(ItemDetails itemDetails, PickingDirection pickingDirection)
     {
         // 由该crop的位置获取到该cropDetails
         GridPropertyDetails gridPropertyDetails = GridPropertiesManager.Instance.GetGridPropertyDetails(cropGridPosition.x, cropGridPosition.y);
@@ -19,27 +23,75 @@ public class Crop : MonoBehaviour
         if (seedItemDetails == null) { return ; }
         CropDetails cropDetails = GridPropertiesManager.Instance.GetCropDetails(seedItemDetails.itemCode);
         if (cropDetails == null) { return ;}
+
+        Animator animator = GetComponentInChildren<Animator>();
+
+        // 使用工具对该crop进行收获时的动画（树木摇曳等）
+        bool isToolRight, isToolLeft, isToolDown, isToolUp;
+        isToolRight = isToolLeft = isToolDown = isToolUp = false;
+        if (pickingDirection == PickingDirection.Left) { isToolLeft = true; }
+        else if(pickingDirection == PickingDirection.Right) { isToolRight = true; }
+        else if (pickingDirection == PickingDirection.Up) { isToolUp = true; }
+        else { isToolDown = true; }
+        if (animator != null)
+        {
+            if (isToolRight || isToolUp) { animator.SetTrigger("usetoolright"); }
+            else if (isToolLeft || isToolDown) { animator.SetTrigger("usetoolleft"); }
+        }
+
         // 检查需要收割的次数以及是否使用该工具收割
         int requiredHarvestActions = cropDetails.RequiredHarvestActionsForTool(itemDetails.itemCode);
-        if(requiredHarvestActions == -1)
-        {
-            return;
-        }
+        if(requiredHarvestActions == -1) { return; }
         harvestActionCount++;
         if (harvestActionCount >= requiredHarvestActions)
         {
-            HarvestCrop(cropDetails, gridPropertyDetails);
+            HarvestCrop(isToolRight,isToolUp,cropDetails, gridPropertyDetails,animator);
         }
     }
 
-    private void HarvestCrop(CropDetails cropDetails, GridPropertyDetails gridPropertyDetails)
+    private void HarvestCrop(bool isUsingToolRight, bool isUsingToolUp,CropDetails cropDetails, GridPropertyDetails gridPropertyDetails, Animator animator)
     {
+        // 设置收获动画的sprite
+        if (cropDetails.isHarvestedAnimation && animator != null)
+        {
+            if (cropDetails.harvestedSprite != null&& cropHarvestedSpriteRenderer != null)
+            {
+                cropHarvestedSpriteRenderer.sprite = cropDetails.harvestedSprite;
+            }
+        // 触发收获动画
+        if (isUsingToolRight || isUsingToolUp) { animator.SetTrigger("harvestright"); }
+        else { animator.SetTrigger("harvestleft"); }
+        }
+        // 重新设置地块信息
         gridPropertyDetails.seedItemCode = -1;
         gridPropertyDetails.growthDays = -1;
         gridPropertyDetails.daysSinceLastHarvest = -1;
         gridPropertyDetails.daysSinceWatered = -1;
-        // 下面语句可能是不必要的
+        // 播放收获动画时隐藏原作物的贴图
+        if (cropDetails.hideCropBeforeHarvestedAnimation)
+        {
+            GetComponentInChildren<SpriteRenderer>().enabled = false;
+        }
+
+        // 下面语句（更新gridProperty）可能是不必要的
         GridPropertiesManager.Instance.SetGridPropertyDetails(gridPropertyDetails.gridX, gridPropertyDetails.gridY, gridPropertyDetails);
+        // 等待动画播放完毕后再添加到物品栏并删除object
+        if (cropDetails.isHarvestedAnimation && animator != null)
+        {
+            StartCoroutine(ProcessHarvestActionAfterAnimation(cropDetails, gridPropertyDetails, animator));
+        }
+        else
+        {
+            HarvestActions(cropDetails, gridPropertyDetails);
+        }
+    }
+
+    private IEnumerator ProcessHarvestActionAfterAnimation(CropDetails cropDetails, GridPropertyDetails gridPropertyDetails, Animator animator)
+    {
+        while (!animator.GetCurrentAnimatorStateInfo(0).IsName("Harvested"))
+        {
+            yield return null;
+        }
         HarvestActions(cropDetails, gridPropertyDetails);
     }
 
