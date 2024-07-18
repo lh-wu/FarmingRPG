@@ -149,14 +149,12 @@ public class GridPropertiesManager : SingletonMonobehavior<GridPropertiesManager
             // 根据作物的信息计算其处于的生长阶段
             int growthStages = cropDetails.growthDays.Length;
             int currentGrowthStage = 0;
-            int daysCounter = cropDetails.totalGrowthDays;
             for(int i = growthStages - 1; i >= 0; --i)
             {
-                if (gridPropertyDetails.growthDays >= daysCounter)
+                if (gridPropertyDetails.growthDays >= cropDetails.growthDays[i])
                 {
                     currentGrowthStage = i;break;
                 }
-                daysCounter = daysCounter - cropDetails.growthDays[i];
             }
             // 由生长阶段获取对应的prefab和sprite
             GameObject cropPrefab = cropDetails.growthPrefab[currentGrowthStage];

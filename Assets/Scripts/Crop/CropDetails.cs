@@ -9,7 +9,6 @@ public class CropDetails
     [ItemCodeDescription]
     public int seedItemCode;            // 种子的itemCode
     public int[] growthDays;            // 不同阶段的生长时间
-    public int totalGrowthDays;         // 总时间
     public GameObject[] growthPrefab;
     public Sprite[] growthSprite;
     public Season[] seasons;

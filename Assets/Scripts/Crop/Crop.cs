@@ -14,7 +14,7 @@ public class Crop : MonoBehaviour
     /// <summary>
     /// 对crop进行收割，重新设置该地块的信息，添加掉落物到背包
     /// </summary>
-    public void ProcessToolAction(ItemDetails itemDetails, PickingDirection pickingDirection)
+    public void ProcessToolAction(ItemDetails itemDetails, bool isToolRight, bool isToolLeft, bool isToolUp, bool isToolDown)
     {
         // 由该crop的位置获取到该cropDetails
         GridPropertyDetails gridPropertyDetails = GridPropertiesManager.Instance.GetGridPropertyDetails(cropGridPosition.x, cropGridPosition.y);
@@ -27,12 +27,6 @@ public class Crop : MonoBehaviour
         Animator animator = GetComponentInChildren<Animator>();
 
         // 使用工具对该crop进行收获时的动画（树木摇曳等）
-        bool isToolRight, isToolLeft, isToolDown, isToolUp;
-        isToolRight = isToolLeft = isToolDown = isToolUp = false;
-        if (pickingDirection == PickingDirection.Left) { isToolLeft = true; }
-        else if(pickingDirection == PickingDirection.Right) { isToolRight = true; }
-        else if (pickingDirection == PickingDirection.Up) { isToolUp = true; }
-        else { isToolDown = true; }
         if (animator != null)
         {
             if (isToolRight || isToolUp) { animator.SetTrigger("usetoolright"); }

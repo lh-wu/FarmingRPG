@@ -201,6 +201,7 @@ public class GridCursor : MonoBehaviour
                     return true;
                 }
                 else { return false; }
+            case ItemType.ChoppingTool:
             case ItemType.CollectingTool:
                 if (gridPropertyDetails.seedItemCode != -1)
                 {
@@ -209,7 +210,7 @@ public class GridCursor : MonoBehaviour
                     if (cropDetails != null)
                     {
                         // 判断是否成熟
-                        if (gridPropertyDetails.growthDays >= cropDetails.totalGrowthDays)
+                        if (gridPropertyDetails.growthDays >= cropDetails.growthDays[cropDetails.growthDays.Length-1])
                         {
                             //判断是否可以使用该tool收割
                             if (cropDetails.CanUseToolToHarvestCrop(itemDetails.itemCode)) { return true; }
