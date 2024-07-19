@@ -9,6 +9,8 @@ public class Crop : MonoBehaviour
 
     [SerializeField] private SpriteRenderer cropHarvestedSpriteRenderer = null;
 
+    [SerializeField] private Transform harvestActionEffectTransform = null;
+
     private int harvestActionCount = 0;
 
     /// <summary>
@@ -31,6 +33,11 @@ public class Crop : MonoBehaviour
         {
             if (isToolRight || isToolUp) { animator.SetTrigger("usetoolright"); }
             else if (isToolLeft || isToolDown) { animator.SetTrigger("usetoolleft"); }
+        }
+        // 触发粒子效果
+        if (cropDetails.isHarvestActionEffect)
+        {
+            EventHandler.CallHarvestActionEffectEvent(harvestActionEffectTransform.position, cropDetails.harvestActionEffect);
         }
 
         // 检查需要收割的次数以及是否使用该工具收割
@@ -91,7 +98,13 @@ public class Crop : MonoBehaviour
 
     private void HarvestActions(CropDetails cropDetails, GridPropertyDetails gridPropertyDetails)
     {
+        // 生成掉落物
         SpawnHarvestedItems(cropDetails);
+        // 如果该作物被收获后需要被转换为另一种作物
+        if (cropDetails.harvestedTransformItemCode > 0)
+        {
+            CreateHarvestedTransformCrop(cropDetails, gridPropertyDetails);
+        }
         Destroy(gameObject);
     }
 
@@ -128,5 +141,19 @@ public class Crop : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 将对应grid的种植信息设置为cropDetails.harvestedTransformItemCode，并显示crop
+    /// </summary>
+    /// <param name="cropDetails"></param>
+    /// <param name="gridPropertyDetails"></param>
+    private void CreateHarvestedTransformCrop(CropDetails cropDetails,GridPropertyDetails gridPropertyDetails)
+    {
+        gridPropertyDetails.seedItemCode = cropDetails.harvestedTransformItemCode;
+        gridPropertyDetails.growthDays = 0;
+        gridPropertyDetails.daysSinceLastHarvest = -1;
+        gridPropertyDetails.daysSinceWatered = -1;
+        GridPropertiesManager.Instance.SetGridPropertyDetails(gridPropertyDetails.gridX, gridPropertyDetails.gridY, gridPropertyDetails);
 
+        GridPropertiesManager.Instance.DisplayPlantedCrop(gridPropertyDetails);
+    }
 }

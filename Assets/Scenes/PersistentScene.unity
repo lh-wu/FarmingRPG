@@ -3102,6 +3102,10 @@ MonoBehaviour:
   pool:
   - poolSize: 10
     prefab: {fileID: 827486141358429009, guid: 9c5cf18231778e5429b2f5d7ed447db2, type: 3}
+  - poolSize: 5
+    prefab: {fileID: 5196096544371065676, guid: 904867f4e88ee5c4bb013c2471de06d4, type: 3}
+  - poolSize: 5
+    prefab: {fileID: 1258698093164857577, guid: 3820efcbd1c3e9e429732b16a079fbb8, type: 3}
   objectPoolTransform: {fileID: 1703816563}
 --- !u!4 &1703816563
 Transform:
@@ -3466,6 +3470,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   reapingPrefab: {fileID: 827486141358429009, guid: 9c5cf18231778e5429b2f5d7ed447db2, type: 3}
+  deciduousLeavesFallingPrefab: {fileID: 5196096544371065676, guid: 904867f4e88ee5c4bb013c2471de06d4, type: 3}
+  choppingTreeTrunkPrefab: {fileID: 1258698093164857577, guid: 3820efcbd1c3e9e429732b16a079fbb8, type: 3}
 --- !u!4 &2055140352
 Transform:
   m_ObjectHideFlags: 0

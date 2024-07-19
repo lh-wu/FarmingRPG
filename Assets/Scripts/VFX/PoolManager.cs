@@ -6,7 +6,7 @@ using UnityEngine;
 public class PoolManager : SingletonMonobehavior<PoolManager>
 {
     private Dictionary<int, Queue<GameObject>> poolDictionary = new Dictionary<int, Queue<GameObject>>();
-    [SerializeField] private Pool[] pool = null;
+    [SerializeField] private Pool[] pool = null;                    // 用于说明各pool的prefab和size
     [SerializeField] private Transform objectPoolTransform = null;
 
     [System.Serializable]
