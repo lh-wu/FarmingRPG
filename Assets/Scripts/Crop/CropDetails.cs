@@ -14,6 +14,7 @@ public class CropDetails
     public Season[] seasons;
     public Sprite harvestedSprite;      // 收获得到item的sprite
 
+    [ItemCodeDescription]
     public int harvestedTransformItemCode;                      // 当一个crop被收获后可以转变为另一种crop（例如树木和树桩）
     public bool hideCropBeforeHarvestedAnimation;               // 在播放收获动画时是否隐藏原作物的sprite
     public bool disableCropCollidersBeforeHarvestedAnimation;
