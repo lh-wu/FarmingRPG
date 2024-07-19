@@ -99,17 +99,24 @@ public static class EventHandler
         DropSelectedItemEvent?.Invoke();
     }
 
+    #region ÊÕ¸îÌØÐ§£¨¸î²Ý¡¢ÂäÒ¶¡¢Ä¾Ð¼µÈ£©
     public static event Action<Vector3, HarvestActionEffect> HarvestActionEffectEvent;
     public static void CallHarvestActionEffectEvent(Vector3 effectPosition,HarvestActionEffect harvestActionEffect)
     {
         HarvestActionEffectEvent?.Invoke(effectPosition, harvestActionEffect);
     }
-
+    #endregion
 
     public static event Action RemoveSelectedItemFromInventoryEvent;
     public static void CallRemoveSelectedItemFromInventoryEvent()
     {
         RemoveSelectedItemFromInventoryEvent?.Invoke();
+    }
+
+    public static event Action InstantiateCropPrefabsEvent;
+    public static void CallInstantiateCropPrefabsEvent()
+    {
+        InstantiateCropPrefabsEvent?.Invoke();
     }
 
 

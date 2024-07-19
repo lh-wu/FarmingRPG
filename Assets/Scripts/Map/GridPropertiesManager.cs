@@ -11,6 +11,8 @@ public class GridPropertiesManager : SingletonMonobehavior<GridPropertiesManager
     private Tilemap groundDecoration1;
     private Tilemap groundDecoration2;
 
+    private bool isFirstTimeSceneLoaded = false;
+
     // 该字段仅保存当前场景的GridPropertyDetails
     private Dictionary<string, GridPropertyDetails> gridPropertyDictionary;
     // 从SO文件中读取所有场景的GridProperty
@@ -54,7 +56,9 @@ public class GridPropertiesManager : SingletonMonobehavior<GridPropertiesManager
         EventHandler.AdvanceGameDayEvent -= AdvanceDay;
     }
 
-
+    /// <summary>
+    /// 从so文件中读取地块信息，保存在GameObjectSave中
+    /// </summary>
     private void InitialiseGridProperties()
     {
         foreach(SO_GridProperties sO_GridProperties in so_gridPropertiesArray)
@@ -98,8 +102,11 @@ public class GridPropertiesManager : SingletonMonobehavior<GridPropertiesManager
             {
                 this.gridPropertyDictionary = gridPropertyDictionary;
             }
-            GameObjectSave.sceneData.Add(sO_GridProperties.sceneName.ToString(), sceneSave);
+            // 保存该场景是否被加载过这一信息
+            sceneSave.boolDictionary = new Dictionary<string, bool>();
+            sceneSave.boolDictionary.Add("isFirstTimeSceneLoaded", true);
 
+            GameObjectSave.sceneData.Add(sO_GridProperties.sceneName.ToString(), sceneSave);
         }
     }
     private void ClearDisplayGroundDecorations()
@@ -455,7 +462,12 @@ public class GridPropertiesManager : SingletonMonobehavior<GridPropertiesManager
         GameObjectSave.sceneData.Remove(sceneName);
         SceneSave sceneSave = new SceneSave();
         sceneSave.gridPropertyDetailsDict = gridPropertyDictionary;
+        sceneSave.boolDictionary = new Dictionary<string, bool>();
+        sceneSave.boolDictionary.Add("isFirstTimeSceneLoaded", isFirstTimeSceneLoaded);
+
         GameObjectSave.sceneData.Add(sceneName, sceneSave);
+
+        
     }
 
     public void ISaveableRestoreScene(string sceneName)
@@ -466,12 +478,27 @@ public class GridPropertiesManager : SingletonMonobehavior<GridPropertiesManager
             {
                 gridPropertyDictionary = sceneSave.gridPropertyDetailsDict;
             }
+
+            // 如果该场景是第一次被加载过，则调用事件CallInstantiateCropPrefabsEvent
+            if (sceneSave.boolDictionary!=null&&sceneSave.boolDictionary.TryGetValue("isFirstTimeSceneLoaded",out bool storedIsFirstSceneLoaded))
+            {
+                isFirstTimeSceneLoaded = storedIsFirstSceneLoaded;
+            }
+            if (isFirstTimeSceneLoaded)
+            {
+                EventHandler.CallInstantiateCropPrefabsEvent();
+            }
+
             //清除场景的挖掘贴图并进行更新
             if (gridPropertyDictionary.Count > 0)
             {
                 ClearDisplayGridPropertyDetails();
                 DisplayGridPropertyDetails();
             }
+        }
+        if (isFirstTimeSceneLoaded == true)
+        {
+            isFirstTimeSceneLoaded = false;
         }
     }
 
