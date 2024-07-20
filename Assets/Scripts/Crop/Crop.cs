@@ -39,7 +39,6 @@ public class Crop : MonoBehaviour
         {
             EventHandler.CallHarvestActionEffectEvent(harvestActionEffectTransform.position, cropDetails.harvestActionEffect);
         }
-
         // 检查需要收割的次数以及是否使用该工具收割
         int requiredHarvestActions = cropDetails.RequiredHarvestActionsForTool(itemDetails.itemCode);
         if(requiredHarvestActions == -1) { return; }
@@ -72,6 +71,16 @@ public class Crop : MonoBehaviour
         if (cropDetails.hideCropBeforeHarvestedAnimation)
         {
             GetComponentInChildren<SpriteRenderer>().enabled = false;
+        }
+
+        // 部分收获sprite含有boxcollider2d，在播放其上升动画的时候依然会触发碰撞，此处禁用这些collider
+        if (cropDetails.disableCropCollidersBeforeHarvestedAnimation)
+        {
+            Collider2D[] collider2Ds = GetComponentsInChildren<Collider2D>();
+            foreach (Collider2D collider2D in collider2Ds)
+            {
+                collider2D.enabled = false;
+            }
         }
 
         // 下面语句（更新gridProperty）可能是不必要的
