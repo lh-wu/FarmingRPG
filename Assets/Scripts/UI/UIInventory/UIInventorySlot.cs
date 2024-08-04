@@ -7,7 +7,7 @@ using System;
 public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEndDragHandler,IPointerEnterHandler,IPointerExitHandler,IPointerClickHandler
 {
     private Camera mainCamera;
-    private GameObject draggedItem;
+    public GameObject draggedItem;
     private Transform parentItem;           //当物品被拖到场景后，应该将其归类到parentItem的子目录里面(Hierachy界面)
     private Canvas parentCanvas;
 
@@ -250,7 +250,7 @@ public class UIInventorySlot : MonoBehaviour, IBeginDragHandler,IDragHandler,IEn
 
     }
 
-    private void ClearSelectedItem()
+    public void ClearSelectedItem()
     {
         inventoryBar.ClearHighlightOnInventorySlots();
         ClearCursor();

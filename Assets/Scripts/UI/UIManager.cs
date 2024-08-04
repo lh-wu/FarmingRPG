@@ -4,6 +4,7 @@ using UnityEngine;
 public class UIManager : SingletonMonobehavior<UIManager>
 {
     private bool _pauseMenuOn = false;
+    [SerializeField] private UIInventoryBar uiInventoryBar = null;
     [SerializeField] private GameObject pauseMenu = null;           // 指向pauseMenuCanvas(在hierarchy中)
     [SerializeField] private GameObject[] menuTabs = null;
     [SerializeField] private Button[] menuButtons = null;
@@ -39,9 +40,12 @@ public class UIManager : SingletonMonobehavior<UIManager>
         }
     }
 
-    // 打开暂停菜单，禁用玩家移动输入，禁用时间流逝；回收垃圾；设置button的背景颜色
+    // 取消拖拽与取消选择;打开暂停菜单，禁用玩家移动输入，禁用时间流逝；回收垃圾；设置button的背景颜色
     private void EnablePauseMenu()
     {
+        // 取消拖拽与取消选择
+        uiInventoryBar.DestoryCurrentlyDraggedItems();
+        uiInventoryBar.ClearCurrentlySelectedItems();
         // 打开暂停菜单，禁用玩家移动输入，禁用时间流逝
         PauseMenuOn = true;
         PlayerController.Instance.EnablePlayerInput = false;
