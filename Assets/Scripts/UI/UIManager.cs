@@ -5,6 +5,7 @@ public class UIManager : SingletonMonobehavior<UIManager>
 {
     private bool _pauseMenuOn = false;
     [SerializeField] private UIInventoryBar uiInventoryBar = null;
+    [SerializeField] private PauseMenuInventoryManagement pauseMenuInventoryManagement = null;
     [SerializeField] private GameObject pauseMenu = null;           // 指向pauseMenuCanvas(在hierarchy中)
     [SerializeField] private GameObject[] menuTabs = null;
     [SerializeField] private Button[] menuButtons = null;
@@ -59,6 +60,7 @@ public class UIManager : SingletonMonobehavior<UIManager>
 
     private void DisablePauseMenu()
     {
+        pauseMenuInventoryManagement.DestroyCurrentlyDraggedItems();
         PauseMenuOn = false;
         PlayerController.Instance.EnablePlayerInput = true;
         Time.timeScale = 1;
@@ -109,6 +111,11 @@ public class UIManager : SingletonMonobehavior<UIManager>
             }
         }
         HighlightButtonForSelectedTab();
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 
 }

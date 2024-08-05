@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2050183731106387088}
   - component: {fileID: 7784404780642624448}
   - component: {fileID: 812310273170126607}
+  - component: {fileID: 2923184104761006569}
   m_Layer: 0
   m_Name: InventoryManagementSlot
   m_TagString: Untagged
@@ -77,6 +78,39 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2923184104761006569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 120105257449579492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 575c8fa350433784397edcc0b592cf65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventoryManagementSlotImage: {fileID: 812310273170126607}
+  textMeshProUGUI: {fileID: 5547781090448464064}
+  greyedOutImageGO: {fileID: 7923602937855550713}
+  inventoryManagement: {fileID: 0}
+  inventoryTextBoxPrefab: {fileID: 3788482065017111071, guid: 7533fd72178200749b9e5b6f14b12abe, type: 3}
+  itemDetails:
+    itemCode: 0
+    itemType: 0
+    itemDescription: 
+    itemSprite: {fileID: 0}
+    itemLongDescription: 
+    itemUseGridRadius: 0
+    itemUseRadius: 0
+    isStartingItem: 0
+    canPickUp: 0
+    canDrop: 0
+    canEat: 0
+    canCarry: 0
+  itemQuantity: 0
+  slotNumber: 0
+  draggedItem: {fileID: 0}
 --- !u!1 &881258726288987467
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,6 +5,8 @@ using UnityEngine;
 [ExecuteAlways]
 public class TileMapGridProperties : MonoBehaviour
 {
+    //由于本脚本中的EditorUtility.SetDirty(gridProperties);仅可在编辑模式中运行，因此需要#if UNITY_EDITOR来控制编译（仅在编辑可用）
+#if UNITY_EDITOR
     // 被attach到每一个scene的特定(属性，diggable或candrop或其他)的tilemap中
     // 附属的tilemap在enable时可绘制，在disable的时候将绘制的结果以list形式保存在SO文件中
     private Tilemap tilemap;
@@ -74,5 +76,5 @@ public class TileMapGridProperties : MonoBehaviour
             Debug.Log("You need to disable property tilemaps before running game");
         }
     }
-
+#endif
 }
