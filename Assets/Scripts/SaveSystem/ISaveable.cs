@@ -8,5 +8,9 @@ public interface ISaveable
     void ISaveableStoreScene(string sceneName);
     void ISaveableRestoreScene(string sceneName);
 
-    
+    #region  保存到文件中
+    GameObjectSave ISaveableSave();
+    void ISaveableLoad(GameSave gameSave);
+    #endregion
+
 }

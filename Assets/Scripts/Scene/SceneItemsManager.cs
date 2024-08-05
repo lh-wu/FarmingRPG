@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 [RequireComponent(typeof(GenerateGUID))]
@@ -104,6 +105,21 @@ public class SceneItemsManager : SingletonMonobehavior<SceneItemsManager>, ISave
                 InstantiateSceneItems(sceneSave.listSceneItem);
             }
         }
+    }
+
+    public void ISaveableLoad(GameSave gameSave)
+    {
+        if(gameSave.gameObjectData.TryGetValue(ISaveableUniqueID,out GameObjectSave gameObjectSave))
+        {
+            GameObjectSave = gameObjectSave;
+            ISaveableRestoreScene(SceneManager.GetActiveScene().name);
+        }
+    }
+
+    public GameObjectSave ISaveableSave()
+    {
+        ISaveableStoreScene(SceneManager.GetActiveScene().name);
+        return GameObjectSave;
     }
 
     /// <summary>

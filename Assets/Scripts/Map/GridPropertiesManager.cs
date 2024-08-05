@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.Tilemaps;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 [RequireComponent(typeof(GenerateGUID))]
@@ -500,6 +501,23 @@ public class GridPropertiesManager : SingletonMonobehavior<GridPropertiesManager
         {
             isFirstTimeSceneLoaded = false;
         }
+    }
+    public void ISaveableLoad(GameSave gameSave)
+    {
+        if(gameSave.gameObjectData.TryGetValue(ISaveableUniqueID, out GameObjectSave gameObjectSave))
+        {
+            // 从文件中获取每个场景的状态
+            GameObjectSave = gameObjectSave;
+            // 先恢复当前场景的状态
+            ISaveableRestoreScene(SceneManager.GetActiveScene().name);
+        }
+    }
+
+    public GameObjectSave ISaveableSave()
+    {
+        // 当前场景可能存在修改，需先把当前场景的修改保存到mem中，再返回
+        ISaveableStoreScene(SceneManager.GetActiveScene().name);
+        return GameObjectSave;
     }
 
 
