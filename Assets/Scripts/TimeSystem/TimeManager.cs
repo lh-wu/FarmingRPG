@@ -1,8 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
-public class TimeManager : SingletonMonobehavior<TimeManager>
+public class TimeManager : SingletonMonobehavior<TimeManager>, ISaveable
 {
     private int gameYear = 1;
     private Season gameSeason = Season.Spring;
@@ -14,10 +14,38 @@ public class TimeManager : SingletonMonobehavior<TimeManager>
     private bool gameClockPaused = false;
     private float gameTick = 0f;
 
+    private string _ISavealeUniqueID;
+    public string ISaveableUniqueID { get { return _ISavealeUniqueID; } set { _ISavealeUniqueID = value; } }
+
+    private GameObjectSave _gameObjectSave;
+    public GameObjectSave GameObjectSave { get { return _gameObjectSave; } set { _gameObjectSave = value; } }
+
+
+    protected override void Awake()
+    {
+        base.Awake();
+        ISaveableUniqueID = GetComponent<GenerateGUID>().GUID;
+        GameObjectSave = new GameObjectSave();
+    }
 
     private void Start()
     {
         EventHandler.CallAdvanceGameMinuteEvent(gameYear, gameSeason, gameDay, gameDayOfWeek, gameHour, gameMinute, gameSecond);
+    }
+
+    private void OnEnable()
+    {
+        ISaveableRegister();
+        // 在切换场景的时候，使得时间暂停
+        EventHandler.BeforeSceneUnloadEvent += BeforeSceneUnloadFadeOut;
+        EventHandler.AfterSceneLoadEvent += AfterSceneLoadFadeIn;
+    }
+
+    private void OnDisable()
+    {
+        ISaveableDeregister();
+        EventHandler.BeforeSceneUnloadEvent -= BeforeSceneUnloadFadeOut;
+        EventHandler.AfterSceneLoadEvent -= AfterSceneLoadFadeIn;
     }
 
     private void Update()
@@ -126,5 +154,102 @@ public class TimeManager : SingletonMonobehavior<TimeManager>
         }
     }
 
+
+    private void BeforeSceneUnloadFadeOut()
+    {
+        gameClockPaused = true;
+    }
+
+    private void AfterSceneLoadFadeIn()
+    {
+        gameClockPaused = false;
+    }
+
+    public void ISaveableDeregister()
+    {
+        SaveLoadManager.Instance.iSaveableObjectList.Remove(this);
+    }
+
+    public void ISaveableRegister()
+    {
+        SaveLoadManager.Instance.iSaveableObjectList.Add(this);
+    }
+
+    public GameObjectSave ISaveableSave()
+    {
+        // 清空保存器
+        GameObjectSave.sceneData.Remove(Settings.PersistentScene);
+        // 新建sceneSave
+        SceneSave sceneSave = new SceneSave();
+        sceneSave.intDictionary = new Dictionary<string, int>();
+        sceneSave.stringDictionary = new Dictionary<string, string>();
+        // 保存各项时间信息到sceneSave
+        sceneSave.intDictionary.Add("gameYear", gameYear);
+        sceneSave.intDictionary.Add("gameDay", gameDay);
+        sceneSave.intDictionary.Add("gameHour", gameHour);
+        sceneSave.intDictionary.Add("gameMinute", gameMinute);
+        sceneSave.intDictionary.Add("gameSecond", gameSecond);
+        sceneSave.stringDictionary.Add("gameDayOfWeek", gameDayOfWeek);
+        sceneSave.stringDictionary.Add("gameSeason", gameSeason.ToString());
+        // 将sceneSave内容保存到保存器中
+        GameObjectSave.sceneData.Add(Settings.PersistentScene, sceneSave);
+        return GameObjectSave;
+    }
+
+    public void ISaveableLoad(GameSave gameSave)
+    {
+        if(gameSave.gameObjectData.TryGetValue(ISaveableUniqueID,out GameObjectSave gameObjectSave))
+        {
+            GameObjectSave = gameObjectSave;
+            if(gameObjectSave.sceneData.TryGetValue(Settings.PersistentScene,out SceneSave sceneSave))
+            {
+                if (sceneSave.intDictionary != null)
+                {
+                    if(sceneSave.intDictionary.TryGetValue("gameYear",out int saveGameYear))
+                    {
+                        gameYear = saveGameYear;
+                    }
+                    if (sceneSave.intDictionary.TryGetValue("gameDay", out int saveGameDay))
+                    {
+                        gameDay = saveGameDay;
+                    }
+                    if (sceneSave.intDictionary.TryGetValue("gameHour", out int saveGameHour))
+                    {
+                        gameHour = saveGameHour;
+                    }
+                    if (sceneSave.intDictionary.TryGetValue("gameMinute", out int saveGameMinute))
+                    {
+                        gameMinute = saveGameMinute;
+                    }
+                    if (sceneSave.intDictionary.TryGetValue("gameSecond", out int saveGameSecond))
+                    {
+                        gameSecond = saveGameSecond;
+                    }
+                }
+
+                if (sceneSave.stringDictionary != null)
+                {
+                    if (sceneSave.stringDictionary.TryGetValue("gameDayOfWeek", out string saveGameDayOfWeek))
+                    {
+                        gameDayOfWeek = saveGameDayOfWeek;
+                    }
+                    if (sceneSave.stringDictionary.TryGetValue("gameSeason", out string saveGameSeason))
+                    {
+                        if(Enum.TryParse<Season>(saveGameSeason,out Season season))
+                        {
+                            gameSeason = season;
+                        }
+                    }
+                }
+
+                gameTick = 0f;
+                EventHandler.CallAdvanceGameMinuteEvent(gameYear, gameSeason, gameDay, gameDayOfWeek, gameHour, gameMinute, gameSecond);
+            }
+        }
+    }
+
+
+    public void ISaveableStoreScene(string sceneName) { }
+    public void ISaveableRestoreScene(string sceneName) { }
 
 }

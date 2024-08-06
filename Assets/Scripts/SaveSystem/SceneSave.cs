@@ -16,4 +16,8 @@ public class SceneSave
     public Dictionary<string, int[]> intArrayDictionary;
 
     public List<InventoryItem>[] listInvItemArray;
+
+    public Dictionary<string, int> intDictionary;
+
+
 }
