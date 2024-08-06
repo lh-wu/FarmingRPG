@@ -772,17 +772,21 @@ public class PlayerController : SingletonMonobehavior<PlayerController>, ISaveab
             // 再查看该保存器是否保存了PersistentScene的内容（实际为玩家坐标、朝向、所在场景等）
             if (gameObjectSave.sceneData.TryGetValue(Settings.PersistentScene,out SceneSave sceneSave))
             {
-                // 读取玩家坐标
-                if(sceneSave.vector3Dictionary!=null&&sceneSave.vector3Dictionary.TryGetValue("playerPosition",out Vector3Serializable playerPosition))
+                Vector3 dstPosition = new Vector3();
+                // 读取玩家坐标,但不应该在此设置坐标，由于FadeAndLoadScene为一个协程，其内置了切换完场景后再移动坐标的功能
+                // 这里如果移动坐标的话，视觉效果上是先在当前场景移动，再切换到保存的场景里；
+                // 实际上，包括下述的玩家朝向也应该在FadeAndLoadScene协程内完成
+                if (sceneSave.vector3Dictionary!=null&&sceneSave.vector3Dictionary.TryGetValue("playerPosition",out Vector3Serializable playerPosition))
                 {
-                    transform.position = new Vector3(playerPosition.x,playerPosition.y,playerPosition.z);
+                    dstPosition = new Vector3(playerPosition.x,playerPosition.y,playerPosition.z);
                 }
                 if (sceneSave.stringDictionary != null)
                 {
                     // 读取玩家所在场景
                     if(sceneSave.stringDictionary.TryGetValue("currentScene",out string currentScene))
                     {
-                        SceneControllerManager.Instance.FadeAndLoadScene(currentScene, transform.position);
+                        SceneControllerManager.Instance.FadeAndLoadScene(currentScene, dstPosition);
+                        // transform.position = dstPosition;
                     }
                     // 读取玩家朝向
                     if(sceneSave.stringDictionary.TryGetValue("playerDirection", out string playerDir))

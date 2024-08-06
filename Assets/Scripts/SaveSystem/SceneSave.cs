@@ -12,4 +12,8 @@ public class SceneSave
     public Dictionary<string, string> stringDictionary;
     // 用来保存玩家人物的位置
     public Dictionary<string,Vector3Serializable> vector3Dictionary;
+
+    public Dictionary<string, int[]> intArrayDictionary;
+
+    public List<InventoryItem>[] listInvItemArray;
 }
