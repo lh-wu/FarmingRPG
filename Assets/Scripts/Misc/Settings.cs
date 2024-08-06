@@ -79,6 +79,8 @@ public static class Settings
     public const int maxCollidersToTestPerReapSwing = 15;
     public const int maxTargetComponentsToDestoryPerReapSwing = 2;
 
+    public const string PersistentScene = "PersistentScene";
+
     static Settings()
     {
         xInput = Animator.StringToHash("xInput");

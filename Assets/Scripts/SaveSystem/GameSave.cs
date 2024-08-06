@@ -4,7 +4,7 @@ using System.Collections.Generic;
 [System.Serializable]
 public class GameSave
 {
-    // stringΪ GUID gameobject ID
+    // string键为 GUID gameobject ID
     public Dictionary<string, GameObjectSave> gameObjectData;
     public GameSave()
     {

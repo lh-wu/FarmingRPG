@@ -8913,7 +8913,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6336609368298835780, guid: 930d5360ab0ddcf4d9cbdd61adc346f7, type: 3}
       propertyPath: scenePositionGoto.y
-      value: -3.5
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 6892734712067046348, guid: 930d5360ab0ddcf4d9cbdd61adc346f7, type: 3}
       propertyPath: m_Size.y
