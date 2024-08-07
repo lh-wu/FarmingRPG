@@ -392,6 +392,8 @@ public class ApplyCharacterCustomisation : MonoBehaviour
 
     private bool isSameColor(Color color1, Color color2)
     {
+        Color32 temp1 = (Color32)color1;
+        Color32 temp2 = (Color32)color2;
         if (Mathf.Abs(color1.r - color2.r) < 0.0001 && Mathf.Abs(color1.g - color2.g) < 0.0001 && Mathf.Abs(color1.b - color2.b) < 0.0001 && (color1.a == color2.a))
         {
             return true;
