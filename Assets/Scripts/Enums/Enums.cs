@@ -184,3 +184,11 @@ public enum GridBoolProperty
     isPath,
     isNPCObstacle
 }
+
+public enum Facing
+{
+    none,
+    front,
+    back,
+    right
+}
