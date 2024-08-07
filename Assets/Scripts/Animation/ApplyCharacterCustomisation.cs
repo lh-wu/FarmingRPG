@@ -21,10 +21,12 @@ public class ApplyCharacterCustomisation : MonoBehaviour
     [SerializeField] private Texture2D maleFarmerBaseTexture = null;
     [SerializeField] private Texture2D femaleFarmerBaseTexture = null;
     [SerializeField] private Texture2D shirtsBaseTexture = null;
+    [SerializeField] private Texture2D hairBaseTexture = null;
     private Texture2D farmerBaseTexture;
 
     [Header("OutputBase Texture To Be Used For Animation")]
     [SerializeField] private Texture2D farmerBaseCustomised = null;
+    [SerializeField] private Texture2D hairCustomised = null;
     private Texture2D farmerBaseShirtsUpdated;
     private Texture2D selectedShirt;
 
@@ -37,9 +39,19 @@ public class ApplyCharacterCustomisation : MonoBehaviour
     [Range(0, 1)]
     [SerializeField] private int inputSex = 0;
 
+    [Header("Select Color for Trouser")]
+    [SerializeField] private Color inputTrouserColor = Color.blue;
+
+    [Header("Select style and color for hair")]
+    [Range(0, 2)]
+    [SerializeField] private int inputHairStyleNo = 0;
+    [SerializeField] private Color inputHairColor = Color.black;
+
+
     private Facing[,] bodyFacingArray;          // 2D array
     private Vector2Int[,] bodyShirtOffsetArray;
 
+    #region Params for body-arm-shirt
     private int bodyRows = 21;
     private int bodyColumns = 6;
     private int farmerSpriteWidth = 16;
@@ -51,12 +63,21 @@ public class ApplyCharacterCustomisation : MonoBehaviour
     private int shirtSpriteWidth = 9;
     private int shirtSpriteHeight = 9;
     private int shirtStyleInSpriteWidth = 16;                       //shirtsBaseTexture一行能容纳的shirt的数量
-
-    private List<colorSwap> colorSwapList;
     // 原生的arm的三种颜色
     private Color32 armTargetColor1 = new Color32(77, 13, 13, 255);
-    private Color32 armTargetColor2 = new Color32(138, 41 ,41, 255);
+    private Color32 armTargetColor2 = new Color32(138, 41, 41, 255);
     private Color32 armTargetColor3 = new Color32(172, 50, 50, 255);
+    private List<colorSwap> colorSwapList;
+    #endregion
+
+    #region Params for hair
+    private int hairTextureWidth = 16;
+    private int hairTextureHeight = 96;
+    private int hairStyleInSpriteWidth = 8;
+
+    #endregion
+
+
 
     private void Awake()
     {
@@ -69,6 +90,10 @@ public class ApplyCharacterCustomisation : MonoBehaviour
         ProcessGender();
         ProcessShirt();
         ProcessArms();
+        ProcessTrousers();
+
+        ProcessHair();
+
         MergeCustomisations();
 
     }
@@ -399,11 +424,54 @@ public class ApplyCharacterCustomisation : MonoBehaviour
         return false;
     }
 
+    private void ProcessTrousers()
+    {
+        // 读取原生的Trouser的texture
+        Color[] farmerTrouserPixels = farmerBaseTexture.GetPixels(288, 0, 96, farmerBaseTexture.height);
+        // 根据目标的color对其进行颜色替换
+        TintPixelColors(farmerTrouserPixels, inputTrouserColor);
+        // 保存
+        farmerBaseCustomised.SetPixels(288, 0, 96, farmerBaseTexture.height, farmerTrouserPixels);
+        farmerBaseCustomised.Apply();
+    }
+
+    private void TintPixelColors(Color[] basePixelArray, Color tintColor)
+    {
+        for (int i = 0; i < basePixelArray.Length; ++i)
+        {
+            basePixelArray[i].r = basePixelArray[i].r * tintColor.r;
+            basePixelArray[i].g = basePixelArray[i].g * tintColor.g;
+            basePixelArray[i].b = basePixelArray[i].b * tintColor.b;
+        }
+    }
+
+    private void ProcessHair()
+    {
+        // 找到对应样式的hairTexture，并保存到hairCustomised
+        AddHairToTexture(inputHairStyleNo);
+        // 修改颜色
+        Color[] farmerSelectedHairPixels = hairCustomised.GetPixels();
+        TintPixelColors(farmerSelectedHairPixels, inputHairColor);
+        // 保存到hairCustomised
+        hairCustomised.SetPixels(farmerSelectedHairPixels);
+        hairCustomised.Apply();
+    }
+
+    private void AddHairToTexture(int hairStyleNo)
+    {
+        int y = (hairStyleNo / hairStyleInSpriteWidth) * hairTextureHeight;
+        int x = (hairStyleNo % hairStyleInSpriteWidth) * hairTextureWidth;
+        Color[] hairPixels = hairBaseTexture.GetPixels(x, y, hairTextureWidth, hairTextureHeight);
+        hairCustomised.SetPixels(hairPixels);
+        hairCustomised.Apply();
+    }
+
 
     private void MergeCustomisations()
     {
         Color[] farmerShirtPixels = farmerBaseShirtsUpdated.GetPixels(0, 0, bodyColumns * farmerSpriteWidth, farmerBaseTexture.height);
-        Color[] farmerTrouserPixelsSelection = farmerBaseTexture.GetPixels(288, 0, 96, farmerBaseTexture.height);
+        // Trouser已经保存在了farmerBaseCustomised中
+        Color[] farmerTrouserPixelsSelection = farmerBaseCustomised.GetPixels(288, 0, 96, farmerBaseTexture.height);
         // 临时变量，用于保存叠加shirt和裤子的body
         Color[] farmerBodyPixels = farmerBaseCustomised.GetPixels(0, 0, bodyColumns * farmerSpriteWidth, farmerBaseTexture.height);
         // 将裤子和shirt叠加到body上
