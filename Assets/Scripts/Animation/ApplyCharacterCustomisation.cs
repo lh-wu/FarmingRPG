@@ -22,11 +22,13 @@ public class ApplyCharacterCustomisation : MonoBehaviour
     [SerializeField] private Texture2D femaleFarmerBaseTexture = null;
     [SerializeField] private Texture2D shirtsBaseTexture = null;
     [SerializeField] private Texture2D hairBaseTexture = null;
+    [SerializeField] private Texture2D hatsBaseTexture = null;
     private Texture2D farmerBaseTexture;
 
     [Header("OutputBase Texture To Be Used For Animation")]
     [SerializeField] private Texture2D farmerBaseCustomised = null;
     [SerializeField] private Texture2D hairCustomised = null;
+    [SerializeField] private Texture2D hatsCustomised = null;
     private Texture2D farmerBaseShirtsUpdated;
     private Texture2D selectedShirt;
 
@@ -39,6 +41,10 @@ public class ApplyCharacterCustomisation : MonoBehaviour
     [Range(0, 1)]
     [SerializeField] private int inputSex = 0;
 
+    [Header("Select Skin Type")]
+    [Range(0, 3)]
+    [SerializeField] private int inputSkinType = 0;
+
     [Header("Select Color for Trouser")]
     [SerializeField] private Color inputTrouserColor = Color.blue;
 
@@ -46,6 +52,10 @@ public class ApplyCharacterCustomisation : MonoBehaviour
     [Range(0, 2)]
     [SerializeField] private int inputHairStyleNo = 0;
     [SerializeField] private Color inputHairColor = Color.black;
+
+    [Header("Select style for hats")]
+    [Range(0, 1)]
+    [SerializeField] private int inputHatStyleNo = 0;
 
 
     private Facing[,] bodyFacingArray;          // 2D array
@@ -74,9 +84,20 @@ public class ApplyCharacterCustomisation : MonoBehaviour
     private int hairTextureWidth = 16;
     private int hairTextureHeight = 96;
     private int hairStyleInSpriteWidth = 8;
-
     #endregion
 
+    #region Params for skin
+    private Color32 skinTargetColor1 = new Color32(145, 117, 90, 255);
+    private Color32 skinTargetColor2 = new Color32(204, 155, 108, 255);
+    private Color32 skinTargetColor3 = new Color32(207, 166, 128, 255);
+    private Color32 skinTargetColor4 = new Color32(238, 195, 154, 255);
+    #endregion
+
+    #region Params for hat
+    private int hatTextureWidth = 20;
+    private int hatTextureHeight = 80;
+    private int hatStylesInSpriteWidth = 12;
+    #endregion
 
 
     private void Awake()
@@ -93,6 +114,10 @@ public class ApplyCharacterCustomisation : MonoBehaviour
         ProcessTrousers();
 
         ProcessHair();
+
+        ProcessSkin();
+
+        ProcessHat();
 
         MergeCustomisations();
 
@@ -466,6 +491,67 @@ public class ApplyCharacterCustomisation : MonoBehaviour
         hairCustomised.Apply();
     }
 
+
+    private void ProcessSkin()
+    {
+        Color[] farmerPixelsToRecolour = farmerBaseCustomised.GetPixels(0, 0, 288, farmerBaseCustomised.height);
+        PopulateSkinColorSwapList(inputSkinType);
+        ChangePixelColors(farmerPixelsToRecolour, colorSwapList);
+        farmerBaseCustomised.SetPixels(0, 0, 288, farmerBaseCustomised.height, farmerPixelsToRecolour);
+        farmerBaseCustomised.Apply();
+    }
+
+    private void PopulateSkinColorSwapList(int skinType)
+    {
+        colorSwapList.Clear();
+        switch (skinType)
+        {
+            case 0:
+                colorSwapList.Add(new colorSwap(skinTargetColor1, skinTargetColor1));
+                colorSwapList.Add(new colorSwap(skinTargetColor2, skinTargetColor2));
+                colorSwapList.Add(new colorSwap(skinTargetColor3, skinTargetColor3));
+                colorSwapList.Add(new colorSwap(skinTargetColor4, skinTargetColor4));
+                break;
+            case 1:
+                colorSwapList.Add(new colorSwap(skinTargetColor1, new Color32(187, 157, 128, 255)));
+                colorSwapList.Add(new colorSwap(skinTargetColor2, new Color32(231, 187, 144, 255)));
+                colorSwapList.Add(new colorSwap(skinTargetColor3, new Color32(221, 186, 154, 255)));
+                colorSwapList.Add(new colorSwap(skinTargetColor4, new Color32(213, 189, 167, 255)));
+                break;
+            case 2:
+                colorSwapList.Add(new colorSwap(skinTargetColor1, new Color32(105, 69, 2, 255)));
+                colorSwapList.Add(new colorSwap(skinTargetColor2, new Color32(128, 87, 12, 255)));
+                colorSwapList.Add(new colorSwap(skinTargetColor3, new Color32(145, 103, 26, 255)));
+                colorSwapList.Add(new colorSwap(skinTargetColor4, new Color32(161, 114, 25, 255)));
+                break;
+            case 3:
+                colorSwapList.Add(new colorSwap(skinTargetColor1, new Color32(151, 132, 0, 255)));
+                colorSwapList.Add(new colorSwap(skinTargetColor2, new Color32(187, 166, 15, 255)));
+                colorSwapList.Add(new colorSwap(skinTargetColor3, new Color32(209, 188, 39, 255)));
+                colorSwapList.Add(new colorSwap(skinTargetColor4, new Color32(211, 199, 112, 255)));
+                break;
+            default:
+                colorSwapList.Add(new colorSwap(skinTargetColor1, skinTargetColor1));
+                colorSwapList.Add(new colorSwap(skinTargetColor2, skinTargetColor2));
+                colorSwapList.Add(new colorSwap(skinTargetColor3, skinTargetColor3));
+                colorSwapList.Add(new colorSwap(skinTargetColor4, skinTargetColor4));
+                break;
+        }
+    }
+
+    private void ProcessHat()
+    {
+        AddHatToTexture(inputHatStyleNo);
+    }
+
+    private void AddHatToTexture(int hatStyleNo)
+    {
+        int y = (hatStyleNo / hatStylesInSpriteWidth) * hatTextureHeight;
+        int x = (hatStyleNo % hatStylesInSpriteWidth) * hatTextureWidth;
+        Color[] hatPixels = hatsBaseTexture.GetPixels(x, y, hatTextureWidth, hatTextureHeight);
+        hatsCustomised.SetPixels(hatPixels);
+        hatsCustomised.Apply();
+    }
 
     private void MergeCustomisations()
     {
