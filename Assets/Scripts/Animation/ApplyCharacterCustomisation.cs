@@ -23,6 +23,7 @@ public class ApplyCharacterCustomisation : MonoBehaviour
     [SerializeField] private Texture2D shirtsBaseTexture = null;
     [SerializeField] private Texture2D hairBaseTexture = null;
     [SerializeField] private Texture2D hatsBaseTexture = null;
+    [SerializeField] private Texture2D adornmentsBaseTexture = null;
     private Texture2D farmerBaseTexture;
 
     [Header("OutputBase Texture To Be Used For Animation")]
@@ -30,7 +31,9 @@ public class ApplyCharacterCustomisation : MonoBehaviour
     [SerializeField] private Texture2D hairCustomised = null;
     [SerializeField] private Texture2D hatsCustomised = null;
     private Texture2D farmerBaseShirtsUpdated;
+    private Texture2D farmerBaseAdornmentsUpdated;
     private Texture2D selectedShirt;
+    private Texture2D selectedAdornment;
 
     // 用于在inspect界面选择shirt种类
     [Header("Select Shirt Style")]
@@ -57,9 +60,14 @@ public class ApplyCharacterCustomisation : MonoBehaviour
     [Range(0, 1)]
     [SerializeField] private int inputHatStyleNo = 0;
 
+    [Header("Select style for Adornments")]
+    [Range(0, 2)]
+    [SerializeField] private int inputAdornmentsStyleNo = 0;
+
 
     private Facing[,] bodyFacingArray;          // 2D array
     private Vector2Int[,] bodyShirtOffsetArray;
+    private Vector2Int[,] bodyAdornmentsOffsetArray;
 
     #region Params for body-arm-shirt
     private int bodyRows = 21;
@@ -99,6 +107,14 @@ public class ApplyCharacterCustomisation : MonoBehaviour
     private int hatStylesInSpriteWidth = 12;
     #endregion
 
+    #region Parms for adornment
+    private int adornmentsTextureWidth = 16;
+    private int adornmentsTextureHeight = 32;
+    private int adornmentsStyleInSpriteWidth = 8;
+    private int adornmentsSpriteWidth = 16;
+    private int adornmentsSpriteHeight = 16;
+    #endregion
+
 
     private void Awake()
     {
@@ -118,6 +134,8 @@ public class ApplyCharacterCustomisation : MonoBehaviour
         ProcessSkin();
 
         ProcessHat();
+
+        ProcessAdornments();
 
         MergeCustomisations();
 
@@ -553,6 +571,157 @@ public class ApplyCharacterCustomisation : MonoBehaviour
         hatsCustomised.Apply();
     }
 
+    private void ProcessAdornments()
+    {
+        bodyAdornmentsOffsetArray = new Vector2Int[bodyColumns,bodyRows];
+        PopulateBodyAdornmentsOffsetArray();
+        AddAdornmentsToTexture(inputAdornmentsStyleNo);
+
+        farmerBaseAdornmentsUpdated = new Texture2D(farmerBaseTexture.width,farmerBaseTexture.height);
+        farmerBaseAdornmentsUpdated.filterMode = FilterMode.Point;
+
+        SetTextureToTransparent(farmerBaseAdornmentsUpdated);
+        ApplyAdornmentsTextureToBase();
+    }
+
+    private void PopulateBodyAdornmentsOffsetArray()
+    {
+        for(int i = 0; i < 6; ++i)
+        {
+            for(int j = 0; j < 11; ++j)
+            {
+                bodyAdornmentsOffsetArray[i, j] = new Vector2Int(99, 99);
+            }
+        }
+
+        bodyAdornmentsOffsetArray[0, 10] = new Vector2Int(99, 99);
+        bodyAdornmentsOffsetArray[1, 10] = new Vector2Int(99, 99);
+        bodyAdornmentsOffsetArray[2, 10] = new Vector2Int(0, 17);
+        bodyAdornmentsOffsetArray[3, 10] = new Vector2Int(0, 18);
+        bodyAdornmentsOffsetArray[4, 10] = new Vector2Int(0, 17);
+        bodyAdornmentsOffsetArray[5, 10] = new Vector2Int(0, 16);
+
+        bodyAdornmentsOffsetArray[0, 11] = new Vector2Int(0, 17);
+        bodyAdornmentsOffsetArray[1, 11] = new Vector2Int(0, 18);
+        bodyAdornmentsOffsetArray[2, 11] = new Vector2Int(0, 17);
+        bodyAdornmentsOffsetArray[3, 11] = new Vector2Int(0, 16);
+        bodyAdornmentsOffsetArray[4, 11] = new Vector2Int(99, 99);
+        bodyAdornmentsOffsetArray[5, 11] = new Vector2Int(99, 99);
+
+        bodyAdornmentsOffsetArray[0, 12] = new Vector2Int(99, 99);
+        bodyAdornmentsOffsetArray[1, 12] = new Vector2Int(99, 99);
+        bodyAdornmentsOffsetArray[2, 12] = new Vector2Int(0, 16);
+        bodyAdornmentsOffsetArray[3, 12] = new Vector2Int(0, 15);
+        bodyAdornmentsOffsetArray[4, 12] = new Vector2Int(0, 15);
+        bodyAdornmentsOffsetArray[5, 12] = new Vector2Int(0, 15);
+
+        bodyAdornmentsOffsetArray[0, 13] = new Vector2Int(0, 16);
+        bodyAdornmentsOffsetArray[1, 13] = new Vector2Int(0, 15);
+        bodyAdornmentsOffsetArray[2, 13] = new Vector2Int(1, 15);
+        bodyAdornmentsOffsetArray[3, 13] = new Vector2Int(1, 15);
+        bodyAdornmentsOffsetArray[4, 13] = new Vector2Int(99, 99);
+        bodyAdornmentsOffsetArray[5, 13] = new Vector2Int(99, 99);
+
+        bodyAdornmentsOffsetArray[0, 14] = new Vector2Int(99, 99);
+        bodyAdornmentsOffsetArray[1, 14] = new Vector2Int(99, 99);
+        bodyAdornmentsOffsetArray[2, 14] = new Vector2Int(0, 13);
+        bodyAdornmentsOffsetArray[3, 14] = new Vector2Int(1, 11);
+        bodyAdornmentsOffsetArray[4, 14] = new Vector2Int(0, 15);
+        bodyAdornmentsOffsetArray[5, 14] = new Vector2Int(0, 17);
+
+        bodyAdornmentsOffsetArray[0, 15] = new Vector2Int(0, 14);
+        bodyAdornmentsOffsetArray[1, 15] = new Vector2Int(0, 11);
+        bodyAdornmentsOffsetArray[2, 15] = new Vector2Int(0, 15);
+        bodyAdornmentsOffsetArray[3, 15] = new Vector2Int(0, 18);
+        bodyAdornmentsOffsetArray[4, 15] = new Vector2Int(99, 99);
+        bodyAdornmentsOffsetArray[5, 15] = new Vector2Int(99, 99);
+
+        bodyAdornmentsOffsetArray[0, 16] = new Vector2Int(99, 99);
+        bodyAdornmentsOffsetArray[1, 16] = new Vector2Int(99, 99);
+        bodyAdornmentsOffsetArray[2, 16] = new Vector2Int(0, 13);
+        bodyAdornmentsOffsetArray[3, 16] = new Vector2Int(0, 14);
+        bodyAdornmentsOffsetArray[4, 16] = new Vector2Int(0, 15);
+        bodyAdornmentsOffsetArray[5, 16] = new Vector2Int(0, 16);
+
+        bodyAdornmentsOffsetArray[0, 17] = new Vector2Int(0, 13);
+        bodyAdornmentsOffsetArray[1, 17] = new Vector2Int(0, 14);
+        bodyAdornmentsOffsetArray[2, 17] = new Vector2Int(0, 15);
+        bodyAdornmentsOffsetArray[3, 17] = new Vector2Int(0, 16);
+        bodyAdornmentsOffsetArray[4, 17] = new Vector2Int(99, 99);
+        bodyAdornmentsOffsetArray[5, 17] = new Vector2Int(99, 99);
+
+        bodyAdornmentsOffsetArray[0, 18] = new Vector2Int(99, 99);
+        bodyAdornmentsOffsetArray[1, 18] = new Vector2Int(99, 99);
+        bodyAdornmentsOffsetArray[2, 18] = new Vector2Int(99, 99);
+        bodyAdornmentsOffsetArray[3, 18] = new Vector2Int(0, 16);
+        bodyAdornmentsOffsetArray[4, 18] = new Vector2Int(0, 15);
+        bodyAdornmentsOffsetArray[5, 18] = new Vector2Int(0, 15);
+
+        bodyAdornmentsOffsetArray[0, 19] = new Vector2Int(0, 16);
+        bodyAdornmentsOffsetArray[1, 19] = new Vector2Int(0, 15);
+        bodyAdornmentsOffsetArray[2, 19] = new Vector2Int(0, 15);
+        bodyAdornmentsOffsetArray[3, 19] = new Vector2Int(0, 16);
+        bodyAdornmentsOffsetArray[4, 19] = new Vector2Int(0, 15);
+        bodyAdornmentsOffsetArray[5, 19] = new Vector2Int(0, 15);
+
+        bodyAdornmentsOffsetArray[0, 20] = new Vector2Int(0, 16);
+        bodyAdornmentsOffsetArray[1, 20] = new Vector2Int(0, 15);
+        bodyAdornmentsOffsetArray[2, 20] = new Vector2Int(0, 15);
+        bodyAdornmentsOffsetArray[3, 20] = new Vector2Int(99, 99);
+        bodyAdornmentsOffsetArray[4, 20] = new Vector2Int(99, 99);
+        bodyAdornmentsOffsetArray[5, 20] = new Vector2Int(99, 99);
+    }
+
+    private void AddAdornmentsToTexture(int adornmentsStyleNo)
+    {
+        selectedAdornment = new Texture2D(adornmentsTextureWidth, adornmentsTextureHeight);
+        selectedAdornment.filterMode = FilterMode.Point;
+
+        int y = (adornmentsStyleNo / adornmentsStyleInSpriteWidth) * adornmentsTextureHeight;
+        int x = (adornmentsStyleNo % adornmentsStyleInSpriteWidth) * adornmentsTextureWidth;
+
+        Color[] adornmentsPixels = adornmentsBaseTexture.GetPixels(x, y, adornmentsTextureWidth, adornmentsTextureHeight);
+        selectedAdornment.SetPixels(adornmentsPixels);
+        selectedAdornment.Apply();
+
+    }
+
+    private void ApplyAdornmentsTextureToBase()
+    {
+        Color[] frontAdornmentsPixels;
+        Color[] rightAdornmentsPixels;
+        frontAdornmentsPixels = selectedAdornment.GetPixels(0,adornmentsSpriteHeight*1,adornmentsSpriteWidth, adornmentsSpriteHeight);
+        rightAdornmentsPixels = selectedAdornment.GetPixels(0,adornmentsSpriteHeight*0,adornmentsSpriteWidth, adornmentsSpriteHeight);
+
+        for(int x= 0; x < bodyColumns; ++x)
+        {
+            for(int y= 0;y < bodyRows; ++y)
+            {
+                int pixelX = x * farmerSpriteWidth;
+                int pixelY = y * farmerSpriteHeight;
+                if (bodyAdornmentsOffsetArray[x,y]!=null)
+                {
+                    pixelX += bodyAdornmentsOffsetArray[x, y].x;
+                    pixelY += bodyAdornmentsOffsetArray[x, y].y;
+                }
+
+                switch(bodyFacingArray[x,y])
+                {
+                    case Facing.none: break;
+                    case Facing.front:
+                        farmerBaseAdornmentsUpdated.SetPixels(pixelX,pixelY,adornmentsSpriteWidth,adornmentsSpriteHeight,frontAdornmentsPixels);
+                        break;
+                    case Facing.right:
+                        farmerBaseAdornmentsUpdated.SetPixels(pixelX, pixelY, adornmentsSpriteWidth, adornmentsSpriteHeight, rightAdornmentsPixels);
+                        break;
+                    case Facing.back: break;
+                        default: break;
+                }
+            }
+        }
+        farmerBaseAdornmentsUpdated.Apply();
+    }
+
     private void MergeCustomisations()
     {
         Color[] farmerShirtPixels = farmerBaseShirtsUpdated.GetPixels(0, 0, bodyColumns * farmerSpriteWidth, farmerBaseTexture.height);
@@ -560,9 +729,13 @@ public class ApplyCharacterCustomisation : MonoBehaviour
         Color[] farmerTrouserPixelsSelection = farmerBaseCustomised.GetPixels(288, 0, 96, farmerBaseTexture.height);
         // 临时变量，用于保存叠加shirt和裤子的body
         Color[] farmerBodyPixels = farmerBaseCustomised.GetPixels(0, 0, bodyColumns * farmerSpriteWidth, farmerBaseTexture.height);
+
+        Color[] farmerAdornmentsPixels = farmerBaseAdornmentsUpdated.GetPixels(0,0,bodyColumns*farmerSpriteWidth,farmerBaseTexture.height);
+
         // 将裤子和shirt叠加到body上
         MergeColourArray(farmerBodyPixels, farmerTrouserPixelsSelection);
         MergeColourArray(farmerBodyPixels, farmerShirtPixels);
+        MergeColourArray(farmerBodyPixels, farmerAdornmentsPixels);
         // farmerBaseCustomised已经设置好了arms， 仅需把叠加了shirt和裤子的body替换过来即可
         farmerBaseCustomised.SetPixels(0, 0, bodyColumns * farmerSpriteWidth, farmerBaseTexture.height, farmerBodyPixels);
         farmerBaseCustomised.Apply();
