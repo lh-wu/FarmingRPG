@@ -7,6 +7,18 @@ public static class Settings
     public const float walkingSpeed = 2.666f;
     #endregion
 
+    #region NPCmovement
+    public static float pixelSize = 0.0625f;
+    #endregion
+
+    #region NPC Animation
+    public static int walkUp;
+    public static int walkDown;
+    public static int walkLeft;
+    public static int walkRight;
+    public static int eventAnimation;
+    #endregion
+
     #region Item Fade
     public const float fadeInSecond = 0.25f;
     public const float fadeOutSecond = 0.35f;
@@ -63,6 +75,7 @@ public static class Settings
     public const string CollectingTool = "Basket";
 
     public const float gridCellSize = 1f;
+    public const float gridCellDiagonalSize = 1.4f;
     public static Vector2 cursorSize = Vector2.one;
 
     #region 工具使用前后摇
@@ -74,15 +87,24 @@ public static class Settings
     public static float afterPickAnimationPause = 0.2f;
     #endregion
 
-    public static float playerCentreYOffset = 0.875f;
-
-    public const int maxCollidersToTestPerReapSwing = 15;
-    public const int maxTargetComponentsToDestoryPerReapSwing = 2;
+    #region Reaping工具相关参数
+    public static float playerCentreYOffset = 0.875f;                   // reaping工具为圆形范围，该字段定义了offset
+    public const int maxCollidersToTestPerReapSwing = 15;               // 一次收割检测的collider的上限
+    public const int maxTargetComponentsToDestoryPerReapSwing = 2;      // 一次收割的上限
+    #endregion
 
     public const string PersistentScene = "PersistentScene";
 
     static Settings()
     {
+        // NPC hash
+        walkUp = Animator.StringToHash("walkUp");
+        walkDown = Animator.StringToHash("walkDown");
+        walkLeft = Animator.StringToHash("walkLeft");
+        walkRight = Animator.StringToHash("walkRight");
+        eventAnimation = Animator.StringToHash("eventAnimation");
+
+        // Player hash
         xInput = Animator.StringToHash("xInput");
         yInput = Animator.StringToHash("yInput");
         isWalking = Animator.StringToHash("isWalking");

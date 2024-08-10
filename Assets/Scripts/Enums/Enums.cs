@@ -192,3 +192,13 @@ public enum Facing
     back,
     right
 }
+
+
+public enum Weather
+{
+    dry,
+    raining,
+    snowing,
+    none,
+    count
+}
