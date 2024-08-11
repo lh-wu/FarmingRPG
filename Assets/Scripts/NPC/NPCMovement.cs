@@ -116,6 +116,16 @@ public class NPCMovement : MonoBehaviour
                 {
                     NPCMovementStep npcMovementStep = npcPath.npcMovementStepStack.Peek();
                     npcCurrentScene = npcMovementStep.sceneName;
+                    // 当前场景和上个场景不同
+                    if (npcCurrentScene != npcPreviousMovementStepScene)
+                    {
+                        npcCurrentGridPosition = (Vector3Int)npcMovementStep.gridCoordinate;
+                        npcNextGridPosition = npcCurrentGridPosition;
+                        transform.position = GetWorldPosition(npcCurrentGridPosition);
+                        npcPreviousMovementStepScene = npcCurrentScene;
+                        npcPath.UpdateTimesOnPath();
+                    }
+
                     if(npcCurrentScene.ToString() == SceneManager.GetActiveScene().name)
                     {
                         SetNPCActiveInScene();
@@ -123,6 +133,25 @@ public class NPCMovement : MonoBehaviour
                         npcNextGridPosition = (Vector3Int)npcMovementStep.gridCoordinate;
                         TimeSpan npcMovementStepTime = new TimeSpan(npcMovementStep.hour, npcMovementStep.minute, npcMovementStep.second);
                         MoveToGridPosition(npcNextGridPosition, npcMovementStepTime, TimeManager.Instance.GetGameTime());
+                    }
+                    else
+                    {
+                        SetNPCInactiveInScene();
+                        npcCurrentGridPosition = (Vector3Int)npcMovementStep.gridCoordinate;
+                        npcNextGridPosition = npcCurrentGridPosition;
+                        transform.position = GetWorldPosition(npcCurrentGridPosition);
+                        TimeSpan npcMovementStepTime = new TimeSpan(npcMovementStep.hour, npcMovementStep.minute, npcMovementStep.second);
+                        TimeSpan gameTime = TimeManager.Instance.GetGameTime();
+                        // 当玩家和npc不在一个场景的时候，npc呈跳跃前进
+                        if (npcMovementStepTime < gameTime)
+                        {
+                            npcMovementStep = npcPath.npcMovementStepStack.Pop();
+                            npcCurrentGridPosition = (Vector3Int)npcMovementStep.gridCoordinate;
+                            npcNextGridPosition = npcCurrentGridPosition;
+                            transform.position = GetWorldPosition(npcCurrentGridPosition);
+                        }
+
+
                     }
                 }
                 else
@@ -295,6 +324,7 @@ public class NPCMovement : MonoBehaviour
         {
             SetNPCInactiveInScene();
         }
+        npcPreviousMovementStepScene = npcCurrentScene;
         npcCurrentGridPosition = GetGridPosition(transform.position);
         npcNextGridPosition = npcCurrentGridPosition;
         npcTargetGridPosition = npcCurrentGridPosition;

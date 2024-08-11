@@ -20,6 +20,9 @@ public class NPCPath : MonoBehaviour
         npcMovementStepStack.Clear();
     }
 
+    /// <summary>
+    /// 根据npcScheduleEvent制定路线，并计算路线上每一个结点的预计到达时间
+    /// </summary>
     public void BuildPath(NPCScheduleEvent npcScheduleEvent)
     {
         ClearPath();
@@ -28,13 +31,50 @@ public class NPCPath : MonoBehaviour
             Vector2Int npcCurrentGridPositon = (Vector2Int)npcMovement.npcCurrentGridPosition;
             Vector2Int npcTargetGridPositon = (Vector2Int)npcScheduleEvent.toGridCoordinate;
             NPCManager.Instance.BuildPath(npcScheduleEvent.toSceneName, npcCurrentGridPositon, npcTargetGridPositon, npcMovementStepStack);
-            if (npcMovementStepStack.Count > 1)
+        }
+        else if (npcScheduleEvent.toSceneName != npcMovement.npcCurrentScene)
+        {
+            SceneRoute sceneRoute;
+            sceneRoute = NPCManager.Instance.GetSceneRoute(npcMovement.npcCurrentScene.ToString(), npcScheduleEvent.toSceneName.ToString());
+            if (sceneRoute != null)
             {
-                UpdateTimesOnPath();
-                npcMovementStepStack.Pop();
-                npcMovement.SetScheduleEventDetails(npcScheduleEvent);
+                for(int i = sceneRoute.scenePathList.Count - 1; i >= 0; --i)
+                {
+                    int toGridX, toGridY, fromGridX, fromGridY;
+                    ScenePath scenePath = sceneRoute.scenePathList[i];
+                    // scenePath.toGridCell如果为999999，则要使用Schedule的目标Grid
+                    // 对于from 同理，若为999999，则说明要使用自己本身的Grid
+                    if (scenePath.toGridCell.x >= Settings.maxGridWidth || scenePath.toGridCell.y >= Settings.maxGridHeight)
+                    {
+                        toGridX = npcScheduleEvent.toGridCoordinate.x;
+                        toGridY = npcScheduleEvent.toGridCoordinate.y;
+                    }
+                    else
+                    {
+                        toGridX = scenePath.toGridCell.x;
+                        toGridY = scenePath.toGridCell.y;
+                    }
+                    if (scenePath.fromGridCell.x >= Settings.maxGridWidth || scenePath.fromGridCell.y >= Settings.maxGridHeight)
+                    {
+                        fromGridX = npcMovement.npcCurrentGridPosition.x;
+                        fromGridY = npcMovement.npcCurrentGridPosition.y;
+                    }
+                    else
+                    {
+                        fromGridX = scenePath.fromGridCell.x;
+                        fromGridY = scenePath.fromGridCell.y;
+                    }
+                    Vector2Int fromGridPosition = new Vector2Int(fromGridX, fromGridY);
+                    Vector2Int toGridPosition = new Vector2Int(toGridX, toGridY);
+                    NPCManager.Instance.BuildPath(scenePath.sceneName, fromGridPosition, toGridPosition, npcMovementStepStack);
+                }
             }
-
+        }
+        if (npcMovementStepStack.Count > 1)
+        {
+            UpdateTimesOnPath();
+            npcMovementStepStack.Pop();
+            npcMovement.SetScheduleEventDetails(npcScheduleEvent);
         }
     }
 

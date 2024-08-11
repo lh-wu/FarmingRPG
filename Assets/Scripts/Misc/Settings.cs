@@ -77,6 +77,10 @@ public static class Settings
     public const float gridCellSize = 1f;
     public const float gridCellDiagonalSize = 1.4f;
     public static Vector2 cursorSize = Vector2.one;
+    public const int maxGridWidth = 99999;
+    public const int maxGridHeight = 99999;
+
+
 
     #region 工具使用前后摇
     public static float useToolAnimationPause = 0.25f;
