@@ -39,6 +39,9 @@ public class NPCPath : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// 计算npcMovementStepStack中每一步，NPC应当在该位置上的时间
+    /// </summary>
     public void UpdateTimesOnPath()
     {
         TimeSpan currentGameTime = TimeManager.Instance.GetGameTime();
@@ -48,25 +51,33 @@ public class NPCPath : MonoBehaviour
             if (previousNPCMovementStep == null)
             {
                 previousNPCMovementStep = npcMovementStep;
-                npcMovementStep.hour = currentGameTime.Hours;
-                npcMovementStep.minute = currentGameTime.Minutes;
-                npcMovementStep.second = currentGameTime.Seconds;
-
-                TimeSpan movementTimeStep;
-
-                if (MovementIsDiagonal(npcMovementStep, previousNPCMovementStep))
-                {
-                    movementTimeStep = new TimeSpan(0, 0, (int)(Settings.gridCellDiagonalSize / Settings.secondsPerGameSecond / npcMovement.npcNormalSpeed));
-                }
-                else
-                {
-                    movementTimeStep = new TimeSpan(0, 0, (int)(Settings.gridCellSize / Settings.secondsPerGameSecond / npcMovement.npcNormalSpeed));
-                }
-
-                currentGameTime = currentGameTime.Add(movementTimeStep);
-                previousNPCMovementStep = npcMovementStep;
             }
+            npcMovementStep.hour = currentGameTime.Hours;
+            npcMovementStep.minute = currentGameTime.Minutes;
+            npcMovementStep.second = currentGameTime.Seconds;
+
+            TimeSpan movementTimeStep;
+
+            if (MovementIsDiagonal(npcMovementStep, previousNPCMovementStep))
+            {
+                movementTimeStep = new TimeSpan(0, 0, (int)(Settings.gridCellDiagonalSize / Settings.secondsPerGameSecond / npcMovement.npcNormalSpeed));
+            }
+            else
+            {
+                movementTimeStep = new TimeSpan(0, 0, (int)(Settings.gridCellSize / Settings.secondsPerGameSecond / npcMovement.npcNormalSpeed));
+            }
+
+            currentGameTime = currentGameTime.Add(movementTimeStep);
+            previousNPCMovementStep = npcMovementStep;
         }
     }
 
+    private bool MovementIsDiagonal(NPCMovementStep npcMovementStep, NPCMovementStep previousNPCMovementStep)
+    {
+        if((npcMovementStep.gridCoordinate.x!=previousNPCMovementStep.gridCoordinate.x)&& (npcMovementStep.gridCoordinate.y != previousNPCMovementStep.gridCoordinate.y))
+        {
+            return true;
+        }
+        return false;
+    }
 }
