@@ -14,6 +14,9 @@ public class NPCScheduleEvent
     public Direction npcFacingDirectionAtDestination = Direction.None;
     public AnimationClip animationAtDestination;
 
+    /// <summary>
+    /// º∆À„∑Ω∑®£∫ (hour * 100) + minute
+    /// </summary>
     public int Time
     {
         get { return (hour * 100) + minute; }
