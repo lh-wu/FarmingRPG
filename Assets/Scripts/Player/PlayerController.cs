@@ -137,7 +137,7 @@ public class PlayerController : SingletonMonobehavior<PlayerController>, ISaveab
         if (inputX!=0 || inputY != 0)
         {
             isIdle = false;
-            // 判断走路还是跑步,需要注意此处的playerDirection并不决定玩家移动动画的朝向，具体逻辑在animator中
+            // 判断走路还是跑步,需要注意此处的playerDirection并不决定玩家移动动画的朝向，仅用于保存游戏时记录玩家朝向；移动朝向逻辑在animator中
             if(Input.GetKey(KeyCode.LeftShift)||Input.GetKey(KeyCode.RightShift)) {
                 isRunning = false;
                 isWalking = true;

@@ -64,7 +64,6 @@ public class MovementAnimationParameterController : MonoBehaviour
                 break;
         }
 
-
         switch (pickingDirection)
         {
             case PickingDirection.Down:
@@ -113,14 +112,10 @@ public class MovementAnimationParameterController : MonoBehaviour
                 break;
         }
 
-
-
-
-
     }
 
     private void AnimationEventPlayFootstepSound()
     {
-    //TODO: ²¥·Å½Å²½Éù
+        AudioManager.Instance.PlaySound(SoundName.effectFootstepHardGround);
     }
 }

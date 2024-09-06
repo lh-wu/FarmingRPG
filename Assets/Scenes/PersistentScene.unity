@@ -6944,6 +6944,52 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7561426099796993584, guid: e7ee3c49414a0c84d997b0c9aa71b978, type: 3}
   m_PrefabInstance: {fileID: 946884156}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &960882744
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 960882745}
+  - component: {fileID: 960882746}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &960882745
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 960882744}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &960882746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 960882744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b676443f094a2524b9442f97dc4e3628, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundPrefab: {fileID: 5321202064887748821, guid: dbea778f0b6789b46b3d1bc27bd7c304, type: 3}
+  so_soundList: {fileID: 11400000, guid: 4db99bc79dace4a4aaf6a736ceece790, type: 2}
 --- !u!1001 &970104070
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10419,6 +10465,8 @@ MonoBehaviour:
     prefab: {fileID: 5196096544371065676, guid: 0a2c80760d0390844bb1a4b772fe0a45, type: 3}
   - poolSize: 5
     prefab: {fileID: 795263879849243449, guid: 876030b6547764847b45ff06d11e7b9a, type: 3}
+  - poolSize: 20
+    prefab: {fileID: 5321202064887748821, guid: dbea778f0b6789b46b3d1bc27bd7c304, type: 3}
   objectPoolTransform: {fileID: 1703816563}
 --- !u!4 &1703816563
 Transform:
@@ -15155,3 +15203,4 @@ SceneRoots:
   - {fileID: 2055140352}
   - {fileID: 1574130047}
   - {fileID: 1743792418}
+  - {fileID: 960882745}
