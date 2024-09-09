@@ -91,13 +91,13 @@ public class NPCPath : MonoBehaviour
             if (previousNPCMovementStep == null)
             {
                 previousNPCMovementStep = npcMovementStep;
+                npcMovementStep.hour = currentGameTime.Hours;
+                npcMovementStep.minute = currentGameTime.Minutes;
+                npcMovementStep.second = currentGameTime.Seconds;
+                continue;
             }
-            npcMovementStep.hour = currentGameTime.Hours;
-            npcMovementStep.minute = currentGameTime.Minutes;
-            npcMovementStep.second = currentGameTime.Seconds;
 
             TimeSpan movementTimeStep;
-
             if (MovementIsDiagonal(npcMovementStep, previousNPCMovementStep))
             {
                 movementTimeStep = new TimeSpan(0, 0, (int)(Settings.gridCellDiagonalSize / Settings.secondsPerGameSecond / npcMovement.npcNormalSpeed));
@@ -108,6 +108,11 @@ public class NPCPath : MonoBehaviour
             }
 
             currentGameTime = currentGameTime.Add(movementTimeStep);
+
+            npcMovementStep.hour = currentGameTime.Hours;
+            npcMovementStep.minute = currentGameTime.Minutes;
+            npcMovementStep.second = currentGameTime.Seconds;
+
             previousNPCMovementStep = npcMovementStep;
         }
     }
